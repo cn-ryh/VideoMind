@@ -5,7 +5,7 @@
 <h1 align="center">VideoMind: A Chain-of-LoRA Agent for Long Video Reasoning</h1>
 
 <p align="center">
-  <a href="https://videoomind.github.io/"><img src="https://img.shields.io/badge/Project-Page-brightgreen"></a>
+  <a href="https://videomind.github.io/"><img src="https://img.shields.io/badge/Project-Page-brightgreen"></a>
   <a href="/LICENSE"><img src="https://img.shields.io/badge/License-BSD--3--Clause-purple"></a>
 </p>
 
