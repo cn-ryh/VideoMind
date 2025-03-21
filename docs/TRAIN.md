@@ -90,4 +90,4 @@ bash scripts/finetune/finetune_qvhighlights_2b.sh
 bash scripts/finetune/finetune_qvhighlights_7b.sh
 ```
 
-The training logs and checkpoints will be saved in the `work_dirs` folder. After training all the roles, you may modify the checkpoint paths in [eval_auto.sh](https://github.com/yeliudev/VideoMind/blob/main/scripts/evaluation/eval_auto.sh) for evaluation.
+The training logs and checkpoints will be saved in the `work_dirs` folder. After training all the roles, you may modify the checkpoint paths in [eval_auto_2b.sh](https://github.com/yeliudev/VideoMind/blob/main/scripts/evaluation/eval_auto_2b.sh) or [eval_auto_7b.sh](https://github.com/yeliudev/VideoMind/blob/main/scripts/evaluation/eval_auto_7b.sh) for evaluation.
