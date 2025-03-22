@@ -1,4 +1,4 @@
-# 🔮 Evaluating VideoMind
+# Evaluating VideoMind
 
 ## 🛠️ Environment Setup
 
@@ -18,7 +18,7 @@ VideoMind
 
 ## 📦 Dataset Preparation
 
-Download the desired datasets / benchmarks from [Hugging Face](https://huggingface.co/datasets/yeliudev/VideoMind-Dataset), extract the videos, and place them into the `data` folder. After processing, make sure the files are organized in the following structure (taking `charades_sta` as an example).
+Download the desired datasets / benchmarks from [Hugging Face](https://huggingface.co/datasets/yeliudev/VideoMind-Dataset), extract the videos, and place them into the `data` folder. The processed files should be organized in the following structure (taking `charades_sta` as an example).
 
 ```
 VideoMind
@@ -45,8 +45,8 @@ bash scripts/evaluation/eval_qvhighlights.sh
 
 Here, `<dataset>` could be replaced with the following dataset names:
 
-- Grounded VideoQA: `cgbench`, `rextime`, `nextgqa`
+- Grounded VideoQA: `cgbench`, `rextime`, `nextgqa`, `qa_ego4d`
 - Video Temporal Grounding: `charades_sta`, `activitynet_captions`, `tacos`, `ego4d_nlq`, `activitynet_rtl`
-- General VideoQA: `videomme`, `mlvu`, `lvbench`, `mvbench`, `longvideobench`
+- General VideoQA: `videomme`, `mlvu`, `lvbench`, `mvbench`, `longvideobench`, `star`
 
 The inference outputs and evaluation metrics will be saved in the `outputs` folder by default.

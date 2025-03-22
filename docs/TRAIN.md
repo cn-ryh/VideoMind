@@ -1,4 +1,4 @@
-# 🚀 Training VideoMind
+# Training VideoMind
 
 ## 🛠️ Environment Setup
 
@@ -50,13 +50,15 @@ VideoMind
 
 The training data used for each role is listed as follows. All the data, including the raw videos, compressed videos, and annotations, could be downloaded on [Hugging Face](https://huggingface.co/datasets/yeliudev/VideoMind-Dataset).
 
-|| Datasets |
+| Role | Datasets |
 |-|-|
-| `Grounder` | QVHighlights, DiDeMo, TACoS, QuerYD, CosMo Cap, InternVid VTime, HiREST (grounding + step) |
-| `Verifier` | QVHighlights Verify, DiDeMo Verify, TACoS Verify |
-| `Planner` | NExTQA Plan, QVHighlights Plan |
+| `Grounder` | `qvhighlights`, `didemo`, `tacos`, `queryd`, `cosmo_cap`, `internvid_vtime`, `hirest_grounding`, `hirest_step` |
+| `Verifier` | `verifying` |
+| `Planner` | `planning` |
 
-Download the required datasets, extract the `tar.gz` files, and place them in the `data` folder. After processing, make sure the files are organized in the following structure (taking `charades_sta` as an example).
+We also add support for more grounding datasets including `ego_timeqa`, `ego4d_nlq`, `ego4d_naq`, `vid_morp`, `videoxum`, and `youcook2`, but they are not used to train the model in our paper. Different variants of these datasets are also supported. See the individual dataset files [here](https://github.com/yeliudev/VideoMind/blob/main/videomind/dataset/sub_classes) for more details.
+
+After downloading the required datasets, extract the `tar.gz` files and place them in the `data` folder. The processed files should be organized in the following structure (taking `charades_sta` as an example).
 
 ```
 VideoMind
