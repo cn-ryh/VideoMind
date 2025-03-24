@@ -27,7 +27,7 @@ wait
 
 cat $pred_path/*.jsonl > $pred_path/hl_val_submission.jsonl
 
-python videomind/eval/metrics_qvhighlights.py $pred_path/hl_val_submission.jsonl
+python videomind/eval/eval_qvhighlights.py $pred_path/hl_val_submission.jsonl
 
 # ==================== test split ====================
 
