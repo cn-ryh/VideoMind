@@ -5,7 +5,6 @@ import copy
 from torch.utils.data import Dataset
 
 from videomind.constants import GROUNDER_PROMPT, REG_TOKEN
-from videomind.utils.io import get_duration
 
 
 class GroundingDataset(Dataset):
@@ -41,9 +40,7 @@ class GroundingDataset(Dataset):
     def __getitem__(self, idx):
         anno = copy.deepcopy(self.annos[idx])
 
-        video_path, query, span = anno['video_path'], anno['query'], anno['span']
-
-        duration = get_duration(video_path)
+        video_path, duration, query, span = anno['video_path'], anno['duration'], anno['query'], anno['span']
 
         messages = [{
             'role':

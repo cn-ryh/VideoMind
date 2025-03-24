@@ -17,14 +17,11 @@ class ActivitynetRTLDataset(GroundingDataset):
     ANNO_PATH_TEST = 'data/activitynet_rtl/annot_val_1_q229.json'
 
     VIDEO_ROOT = 'data/activitynet/videos_3fps_480_noaudio'
-    DURATIONS = 'data/activitynet/durations.json'
 
     UNIT = 0.01
 
     @classmethod
     def load_annos(self, split='train'):
-        durations = nncore.load(self.DURATIONS)
-
         if split == 'train':
             raw_annos = nncore.load(self.ANNO_PATH_TRAIN, object_pairs_hook=OrderedDict)
 
@@ -42,7 +39,7 @@ class ActivitynetRTLDataset(GroundingDataset):
                         source='activitynet_rtl',
                         data_type='grounding',
                         video_path=nncore.join(self.VIDEO_ROOT, vid + '.mp4'),
-                        duration=durations[vid],
+                        duration=raw_anno['duration'],
                         query=parse_query(meta['q']),
                         span=[span])
 
@@ -62,7 +59,7 @@ class ActivitynetRTLDataset(GroundingDataset):
                     source='activitynet_rtl',
                     data_type='grounding',
                     video_path=nncore.join(self.VIDEO_ROOT, vid + '.mp4'),
-                    duration=durations[vid],
+                    duration=raw_anno['duration'],
                     query=parse_query(raw_anno['question']),
                     span=[span])
 

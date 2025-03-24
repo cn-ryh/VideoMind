@@ -12,6 +12,7 @@ class ReXTimeDataset(AnsweringDataset):
 
     ANNO_PATH_TRAIN = 'data/rextime/rextime_train.json'
     ANNO_PATH_VALID = 'data/rextime/rextime_val.json'
+    ANNO_PATH_TEST = 'data/rextime/rextime_test_release.json'
 
     VIDEO_ROOT_ANET = 'data/activitynet/videos_3fps_480_noaudio'
     VIDEO_ROOT_QVHL = 'data/qvhighlights/videos_3fps_480_noaudio'
@@ -29,8 +30,11 @@ class ReXTimeDataset(AnsweringDataset):
     def load_annos(self, split='train'):
         if split == 'train':
             raw_annos = nncore.load(self.ANNO_PATH_TRAIN)
-        else:
+        elif split == 'valid':
             raw_annos = nncore.load(self.ANNO_PATH_VALID)
+        else:
+            print('WARNING: Test split does not have ground truth annotations')
+            raw_annos = nncore.load(self.ANNO_PATH_TEST)
 
         durations_anet = nncore.load(self.DURATIONS_ANET)
         durations_qvhl = nncore.load(self.DURATIONS_QVHL)

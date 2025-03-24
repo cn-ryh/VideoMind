@@ -17,7 +17,6 @@ class Ego4DNaQDataset(GroundingDataset):
     ANNO_PATH_TEST = 'data/ego4d_naq/test.json'
 
     VIDEO_ROOT = 'data/ego4d/v2/videos_3fps_480_noaudio'
-    DURATIONS = 'data/ego4d/v2/durations.json'
 
     UNIT = 0.001
 
@@ -30,11 +29,9 @@ class Ego4DNaQDataset(GroundingDataset):
         else:
             raw_annos = nncore.load(self.ANNO_PATH_TEST, object_pairs_hook=OrderedDict)
 
-        durations = nncore.load(self.DURATIONS)
-
         annos = []
         for vid, raw_anno in raw_annos.items():
-            duration = durations[vid]
+            duration = raw_anno['num_frames'] / raw_anno['fps']
 
             # 300s: 254k samples (dropped 121k samples merged 156k samples)
             # 480s: 567k samples (dropped 249k samples merged 328k samples)

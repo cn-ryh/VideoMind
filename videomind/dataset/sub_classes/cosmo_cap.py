@@ -13,7 +13,6 @@ class CosMoCapDataset(GroundingDataset):
     ANNO_PATH = 'data/cosmo_cap/anno_cosmo_cap.jsonl'
 
     VIDEO_ROOT = 'data/cosmo_cap/videos_3fps_480_noaudio'
-    DURATIONS = 'data/cosmo_cap/durations.json'
 
     UNIT = 1.0
 
@@ -22,20 +21,14 @@ class CosMoCapDataset(GroundingDataset):
         assert split == 'train'
 
         raw_annos = nncore.load(self.ANNO_PATH)
-        durations = nncore.load(self.DURATIONS)
 
         annos = []
         for raw_anno in raw_annos:
-            vid = raw_anno['vid']
-
-            if vid not in durations:
-                continue
-
             anno = dict(
                 source='cosmo_cap',
                 data_type='grounding',
-                video_path=nncore.join(self.VIDEO_ROOT, vid + '.mp4'),
-                duration=durations[vid],
+                video_path=nncore.join(self.VIDEO_ROOT, raw_anno['vid'] + '.mp4'),
+                duration=raw_anno['duration'],
                 query=parse_query(raw_anno['query']),
                 span=[raw_anno['span']])
 

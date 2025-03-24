@@ -13,10 +13,9 @@ from videomind.utils.parser import parse_query
 class HiRESTGroundingDataset(GroundingDataset):
 
     ANNO_PATH_TRAIN = 'data/hirest/all_data_train.json'
-    ANNO_PATH_TEST = 'data/hirest/all_data_val.json'
+    ANNO_PATH_VALID = 'data/hirest/all_data_val.json'
 
     VIDEO_ROOT = 'data/hirest/videos_3fps_480_noaudio'
-    DURATIONS = 'data/hirest/durations.json'
 
     UNIT = 1.0
 
@@ -25,9 +24,10 @@ class HiRESTGroundingDataset(GroundingDataset):
         if split == 'train':
             raw_annos = nncore.load(self.ANNO_PATH_TRAIN, object_pairs_hook=OrderedDict)
         else:
-            raw_annos = nncore.load(self.ANNO_PATH_TEST, object_pairs_hook=OrderedDict)
+            raw_annos = nncore.load(self.ANNO_PATH_VALID, object_pairs_hook=OrderedDict)
 
-        durations = nncore.load(self.DURATIONS)
+        all_videos = nncore.ls(self.VIDEO_ROOT, ext='.mp4')
+        all_videos = set(v[:11] for v in all_videos)
 
         annos = []
         for query, videos in raw_annos.items():
@@ -39,14 +39,14 @@ class HiRESTGroundingDataset(GroundingDataset):
 
                 vid = video_name.split('.')[0]
 
-                if vid not in durations:
+                if vid not in all_videos:
                     continue
 
                 anno = dict(
                     source='hirest_grounding',
                     data_type='grounding',
                     video_path=nncore.join(self.VIDEO_ROOT, video_name),
-                    duration=durations[vid],
+                    duration=raw_anno['v_duration'],
                     query=parse_query(query),
                     span=[raw_anno['bounds']])
 
@@ -63,9 +63,10 @@ class HiRESTStepDataset(HiRESTGroundingDataset):
         if split == 'train':
             raw_annos = nncore.load(self.ANNO_PATH_TRAIN, object_pairs_hook=OrderedDict)
         else:
-            raw_annos = nncore.load(self.ANNO_PATH_TEST, object_pairs_hook=OrderedDict)
+            raw_annos = nncore.load(self.ANNO_PATH_VALID, object_pairs_hook=OrderedDict)
 
-        durations = nncore.load(self.DURATIONS)
+        all_videos = nncore.ls(self.VIDEO_ROOT, ext='.mp4')
+        all_videos = set(v[:11] for v in all_videos)
 
         annos = []
         for query, videos in raw_annos.items():
@@ -75,7 +76,7 @@ class HiRESTStepDataset(HiRESTGroundingDataset):
 
                 vid = video_name.split('.')[0]
 
-                if vid not in durations:
+                if vid not in all_videos:
                     continue
 
                 for step in raw_anno['steps']:
@@ -85,7 +86,7 @@ class HiRESTStepDataset(HiRESTGroundingDataset):
                         source='hirest_step',
                         data_type='grounding',
                         video_path=nncore.join(self.VIDEO_ROOT, video_name),
-                        duration=durations[vid],
+                        duration=raw_anno['v_duration'],
                         query=parse_query(step['heading']),
                         span=[step['absolute_bounds']])
 
@@ -102,9 +103,10 @@ class HiRESTStepBiasDataset(HiRESTStepDataset):
         if split == 'train':
             raw_annos = nncore.load(self.ANNO_PATH_TRAIN, object_pairs_hook=OrderedDict)
         else:
-            raw_annos = nncore.load(self.ANNO_PATH_TEST, object_pairs_hook=OrderedDict)
+            raw_annos = nncore.load(self.ANNO_PATH_VALID, object_pairs_hook=OrderedDict)
 
-        durations = nncore.load(self.DURATIONS)
+        all_videos = nncore.ls(self.VIDEO_ROOT, ext='.mp4')
+        all_videos = set(v[:11] for v in all_videos)
 
         annos = []
         for query, videos in raw_annos.items():
@@ -114,7 +116,7 @@ class HiRESTStepBiasDataset(HiRESTStepDataset):
 
                 vid = video_name.split('.')[0]
 
-                if vid not in durations:
+                if vid not in all_videos:
                     continue
 
                 for i in range(len(raw_anno['steps']) - 1):
@@ -130,7 +132,7 @@ class HiRESTStepBiasDataset(HiRESTStepDataset):
                         source='hirest_step_bias',
                         data_type='grounding',
                         video_path=nncore.join(self.VIDEO_ROOT, video_name),
-                        duration=durations[vid],
+                        duration=raw_anno['v_duration'],
                         query=query_a,
                         span=[span_a])
 
@@ -138,7 +140,7 @@ class HiRESTStepBiasDataset(HiRESTStepDataset):
                         source='hirest_step_bias',
                         data_type='grounding',
                         video_path=nncore.join(self.VIDEO_ROOT, video_name),
-                        duration=durations[vid],
+                        duration=raw_anno['v_duration'],
                         query=query_b,
                         span=[span_b])
 

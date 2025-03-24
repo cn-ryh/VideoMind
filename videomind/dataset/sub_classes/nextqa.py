@@ -18,7 +18,6 @@ class NExTQADataset(AnsweringDataset):
 
     VIDEO_ID_MAP = 'data/nextqa/map_vid_vidorID.json'
     VIDEO_ROOT = 'data/nextqa/NExTVideo'
-    DURATIONS = 'data/nextqa/durations.json'
 
     @classmethod
     def load_annos(self, split='train'):
@@ -34,7 +33,6 @@ class NExTQADataset(AnsweringDataset):
             raw_annos = [d for d in reader]
 
         video_id_map = nncore.load(self.VIDEO_ID_MAP)
-        durations = nncore.load(self.DURATIONS)
 
         annos = []
         for raw_anno in raw_annos:
@@ -53,7 +51,6 @@ class NExTQADataset(AnsweringDataset):
                 data_type='multimodal',
                 uid=f'{vid}_{qid}',
                 video_path=nncore.join(self.VIDEO_ROOT, video_id + '.mp4'),
-                duration=durations[video_id],
                 query=query,
                 question=question,
                 options=options,

@@ -15,7 +15,6 @@ class TACoSDataset(GroundingDataset):
     ANNO_PATH_TEST = 'data/tacos/test.jsonl'
 
     VIDEO_ROOT = 'data/tacos/videos_3fps_480_noaudio'
-    DURATIONS = 'data/tacos/durations.json'
 
     UNIT = 0.001
 
@@ -28,8 +27,6 @@ class TACoSDataset(GroundingDataset):
         else:
             raw_annos = nncore.load(self.ANNO_PATH_TEST)
 
-        durations = nncore.load(self.DURATIONS)
-
         annos = []
         for raw_anno in raw_annos:
             assert len(raw_anno['relevant_windows']) == 1
@@ -40,7 +37,7 @@ class TACoSDataset(GroundingDataset):
                 source='tacos',
                 data_type='grounding',
                 video_path=nncore.join(self.VIDEO_ROOT, vid + '-cam-002.mp4'),
-                duration=durations[vid],
+                duration=raw_anno['duration'],
                 query=parse_query(raw_anno['query']),
                 span=raw_anno['relevant_windows'])
 

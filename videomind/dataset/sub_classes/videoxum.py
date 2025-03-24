@@ -15,7 +15,6 @@ class VideoXumDataset(GroundingDataset):
     ANNO_PATH_TEST = 'data/videoxum/test_videoxum.json'
 
     VIDEO_ROOT = 'data/activitynet/videos_3fps_480_noaudio'
-    DURATIONS = 'data/activitynet/durations.json'
 
     UNIT = 0.01
 
@@ -28,11 +27,11 @@ class VideoXumDataset(GroundingDataset):
         else:
             raw_annos = nncore.load(self.ANNO_PATH_TEST)
 
-        durations = nncore.load(self.DURATIONS)
-
         annos = []
         for raw_anno in raw_annos:
             vid = raw_anno['video_id']
+
+            duration = raw_anno['duration']
 
             for query, spans in zip(raw_anno['tsum'], raw_anno['vsum']):
                 assert len(spans) == 10
@@ -44,7 +43,7 @@ class VideoXumDataset(GroundingDataset):
                     source='videoxum',
                     data_type='grounding',
                     video_path=nncore.join(self.VIDEO_ROOT, vid + '.mp4'),
-                    duration=durations[vid],
+                    duration=duration,
                     query=parse_query(query),
                     span=[span])
 

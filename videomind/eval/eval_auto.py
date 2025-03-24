@@ -131,14 +131,14 @@ if __name__ == '__main__':
                 tab_iou_all[-1] += top
 
                 for i, k in enumerate(top_k):
-                    for j, t in enumerate(thres):
-                        if iou[:k].max() >= t:
+                    for j, h in enumerate(thres):
+                        if iou[:k].max() >= h:
                             for t in task:
                                 tab_iou[t][i * len(thres) + j + 2] += 1
                             tab_iou_all[i * len(thres) + j + 2] += 1
                             if k == 1:
                                 iou_hit[j + 1] = True
-                                if t == 0.5:
+                                if h == 0.5:
                                     iou_hit[0] = True
 
                 if sample.get('pred_ori') is not None:
@@ -160,12 +160,12 @@ if __name__ == '__main__':
                 tab_iop_all[-1] += top
 
                 for i, k in enumerate(top_k):
-                    for j, t in enumerate(thres):
-                        if iop[:k].max() >= t:
+                    for j, h in enumerate(thres):
+                        if iop[:k].max() >= h:
                             for t in task:
                                 tab_iop[t][i * len(thres) + j + 2] += 1
                             tab_iop_all[i * len(thres) + j + 2] += 1
-                            if k == 1 and t == 0.5:
+                            if k == 1 and h == 0.5:
                                 iop_hit = True
 
                 if sample.get('pred_ori') is not None:
@@ -279,13 +279,11 @@ if __name__ == '__main__':
         nncore.log('\nQA:')
         tab = tabulate(
             [[task, tab_ans[task][0], tab_ans[task][1]] +
-             [f'{tab_ans[task][i] / tab_ans[task][0] * 100:.2f}' for i in range(2, 5)] +
-             [f'{tab_ans[task][4] / tab_iop[task][3] * 100:.2f}' if tab_iop[task][3] > 0 else '0']
+             [f'{tab_ans[task][i] / tab_ans[task][0] * 100:.2f}' for i in range(2, 5)]
              for task in tasks if task in tab_ans] +
             [['all', tab_ans_all[0], tab_ans_all[1]] +
-             [f'{tab_ans_all[i] / tab_ans_all[0] * 100:.2f}'
-              for i in range(2, 5)] + [f'{tab_ans_all[4] / tab_iop_all[3] * 100:.2f}' if tab_iop_all[3] > 0 else '0']],
-            headers=['Task', '#Samples', 'Failed', 'Acc', 'Acc (IoU >= 0.5)', 'Acc (IoP >= 0.5)', 'Acc @ IoP >= 0.5'],
+             [f'{tab_ans_all[i] / tab_ans_all[0] * 100:.2f}' for i in range(2, 5)]],
+            headers=['Task', '#Samples', 'Failed', 'Acc', 'Acc (IoU >= 0.5)', 'Acc (IoP >= 0.5)'],
             tablefmt='pretty',
             stralign='left')
         nncore.log(tab)

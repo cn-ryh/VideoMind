@@ -13,7 +13,6 @@ class InternVidVTimeDataset(GroundingDataset):
     ANNO_PATH = 'data/internvid_vtime/anno_internvid_vtime_query_gpt4o_mini.jsonl'
 
     VIDEO_ROOT = 'data/internvid_vtime/videos_crop_3fps_480_noaudio'
-    DURATIONS = 'data/internvid_vtime/durations.json'
 
     UNIT = 0.1
 
@@ -22,20 +21,22 @@ class InternVidVTimeDataset(GroundingDataset):
         assert split == 'train'
 
         raw_annos = nncore.load(self.ANNO_PATH)
-        durations = nncore.load(self.DURATIONS)
+
+        all_videos = nncore.ls(self.VIDEO_ROOT, ext='.mp4')
+        all_videos = set(v[:11] for v in all_videos)
 
         annos = []
         for raw_anno in raw_annos:
             vid = raw_anno['vid']
 
-            if vid not in durations:
+            if vid not in all_videos:
                 continue
 
             anno = dict(
                 source='internvid_vtime',
                 data_type='grounding',
                 video_path=nncore.join(self.VIDEO_ROOT, vid + '.mp4'),
-                duration=durations[vid],
+                duration=raw_anno['duration'],
                 query=parse_query(raw_anno['query']),
                 span=[raw_anno['span']])
 

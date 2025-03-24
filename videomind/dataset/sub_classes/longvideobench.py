@@ -20,6 +20,7 @@ class LongVideoBenchDataset(Dataset):
         if split == 'valid':
             raw_annos = nncore.load(self.ANNO_PATH_VALID)
         else:
+            print('WARNING: Test split does not have ground truth annotations')
             raw_annos = nncore.load(self.ANNO_PATH_TEST)
 
         annos = []
@@ -39,11 +40,13 @@ class LongVideoBenchDataset(Dataset):
                 query=parse_query(raw_anno['question']),
                 question=parse_question(raw_anno['question']),
                 options=raw_anno['candidates'],
-                answer=raw_anno['candidates'][raw_anno['correct_choice']],
-                ans=chr(ord('A') + raw_anno['correct_choice']),
                 task=str(raw_anno['duration_group']),
                 level=raw_anno['level'],
                 question_category=raw_anno['question_category'])
+
+            if 'correct_choice' in raw_anno:
+                anno['answer'] = raw_anno['candidates'][raw_anno['correct_choice']]
+                anno['ans'] = chr(ord('A') + raw_anno['correct_choice'])
 
             annos.append(anno)
 

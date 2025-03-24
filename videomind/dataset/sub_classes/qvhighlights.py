@@ -15,7 +15,6 @@ class QVHighlightsDataset(GroundingDataset):
     ANNO_PATH_TEST = 'data/qvhighlights/highlight_test_release.jsonl'
 
     VIDEO_ROOT = 'data/qvhighlights/videos_3fps_480_noaudio'
-    DURATIONS = 'data/qvhighlights/durations.json'
 
     UNIT = 2.0
 
@@ -26,9 +25,8 @@ class QVHighlightsDataset(GroundingDataset):
         elif split == 'valid':
             raw_annos = nncore.load(self.ANNO_PATH_VALID)
         else:
+            print('WARNING: Test split does not have ground truth annotations')
             raw_annos = nncore.load(self.ANNO_PATH_TEST)
-
-        durations = nncore.load(self.DURATIONS)
 
         annos = []
         for raw_anno in raw_annos:
@@ -39,7 +37,7 @@ class QVHighlightsDataset(GroundingDataset):
                 source='qvhighlights',
                 data_type='grounding',
                 video_path=nncore.join(self.VIDEO_ROOT, vid + '.mp4'),
-                duration=durations[vid],
+                duration=raw_anno['duration'],
                 query=parse_query(raw_anno['query']),
                 span=raw_anno.get('relevant_windows'),
                 vid=vid,
@@ -58,7 +56,6 @@ class QVHighlightsSingleDataset(QVHighlightsDataset):
         assert split == 'train'
 
         raw_annos = nncore.load(self.ANNO_PATH_TRAIN)
-        durations = nncore.load(self.DURATIONS)
 
         annos = []
         for raw_anno in raw_annos:
@@ -72,7 +69,7 @@ class QVHighlightsSingleDataset(QVHighlightsDataset):
                 source='qvhighlights_single',
                 data_type='grounding',
                 video_path=nncore.join(self.VIDEO_ROOT, vid + '.mp4'),
-                duration=durations[vid],
+                duration=raw_anno['duration'],
                 query=parse_query(raw_anno['query']),
                 span=raw_anno.get('relevant_windows'))
 

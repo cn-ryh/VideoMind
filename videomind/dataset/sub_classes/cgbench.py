@@ -14,7 +14,6 @@ class CGBenchDataset(Dataset):
 
     VIDEO_ROOT = 'data/cgbench/videos_3fps_480_noaudio'
     SUBTITLE_ROOT = 'data/cgbench/subtitles'
-    DURATIONS = 'data/cgbench/durations.json'
 
     UNIT = 0.001
 
@@ -23,7 +22,6 @@ class CGBenchDataset(Dataset):
         assert split == 'test'
 
         raw_annos = nncore.load(self.ANNO_PATH_TEST)
-        durations = nncore.load(self.DURATIONS)
 
         annos = []
         for raw_anno in raw_annos:
@@ -34,7 +32,7 @@ class CGBenchDataset(Dataset):
                 data_type='multimodal',
                 video_path=nncore.join(self.VIDEO_ROOT, vid + '.mp4'),
                 subtitle_path=nncore.join(self.SUBTITLE_ROOT, vid + '.srt'),
-                duration=durations[vid],
+                duration=raw_anno['duration'],
                 query=parse_query(raw_anno['question']),
                 question=parse_question(raw_anno['question']),
                 options=[o.capitalize() for o in raw_anno['choices']],

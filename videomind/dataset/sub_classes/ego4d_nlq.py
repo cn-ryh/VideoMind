@@ -11,10 +11,9 @@ from videomind.utils.parser import parse_query
 class Ego4DNLQDataset(GroundingDataset):
 
     ANNO_PATH_TRAIN = 'data/ego4d_nlq/nlq_train.jsonl'
-    ANNO_PATH_TEST = 'data/ego4d_nlq/nlq_val.jsonl'
+    ANNO_PATH_VALID = 'data/ego4d_nlq/nlq_val.jsonl'
 
     VIDEO_ROOT = 'data/ego4d/v2/videos_3fps_480_noaudio'
-    DURATIONS = 'data/ego4d/v2/durations.json'
 
     UNIT = 0.001
 
@@ -23,7 +22,7 @@ class Ego4DNLQDataset(GroundingDataset):
         if split == 'train':
             raw_annos = nncore.load(self.ANNO_PATH_TRAIN)
         else:
-            raw_annos = nncore.load(self.ANNO_PATH_TEST)
+            raw_annos = nncore.load(self.ANNO_PATH_VALID)
 
         annos = []
         for raw_anno in raw_annos:

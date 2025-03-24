@@ -17,7 +17,6 @@ class ActivitynetCaptionsDataset(GroundingDataset):
     ANNO_PATH_TEST = 'data/activitynet_captions/val_2.json'
 
     VIDEO_ROOT = 'data/activitynet/videos_3fps_480_noaudio'
-    DURATIONS = 'data/activitynet/durations.json'
 
     UNIT = 0.01
 
@@ -30,8 +29,6 @@ class ActivitynetCaptionsDataset(GroundingDataset):
         else:
             raw_annos = nncore.load(self.ANNO_PATH_TEST, object_pairs_hook=OrderedDict)
 
-        durations = nncore.load(self.DURATIONS)
-
         annos = []
         for vid, raw_anno in raw_annos.items():
             for query, span in zip(raw_anno['sentences'], raw_anno['timestamps']):
@@ -39,7 +36,7 @@ class ActivitynetCaptionsDataset(GroundingDataset):
                     source='activitynet_captions',
                     data_type='grounding',
                     video_path=nncore.join(self.VIDEO_ROOT, vid + '.mp4'),
-                    duration=durations[vid],
+                    duration=raw_anno['duration'],
                     query=parse_query(query),
                     span=[span])
 
@@ -60,8 +57,6 @@ class ActivitynetCaptionsBiasDataset(ActivitynetCaptionsDataset):
         else:
             raw_annos = nncore.load(self.ANNO_PATH_TEST, object_pairs_hook=OrderedDict)
 
-        durations = nncore.load(self.DURATIONS)
-
         annos = []
         for vid, raw_anno in raw_annos.items():
             assert len(raw_anno['sentences']) == len(raw_anno['timestamps'])
@@ -78,7 +73,7 @@ class ActivitynetCaptionsBiasDataset(ActivitynetCaptionsDataset):
                         source='activitynet_captions_bias',
                         data_type='grounding',
                         video_path=nncore.join(self.VIDEO_ROOT, vid + '.mp4'),
-                        duration=durations[vid],
+                        duration=raw_anno['duration'],
                         query=query_a,
                         span=[span_a])
 
@@ -86,7 +81,7 @@ class ActivitynetCaptionsBiasDataset(ActivitynetCaptionsDataset):
                         source='activitynet_captions_bias',
                         data_type='grounding',
                         video_path=nncore.join(self.VIDEO_ROOT, vid + '.mp4'),
-                        duration=durations[vid],
+                        duration=raw_anno['duration'],
                         query=query_b,
                         span=[span_b])
 

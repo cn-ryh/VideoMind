@@ -19,9 +19,7 @@ class NExTGQADataset(AnsweringDataset):
     SPAN_PATH_TEST = 'data/nextgqa/gsub_test.json'
 
     VIDEO_ID_MAP = 'data/nextgqa/map_vid_vidorID.json'
-
     VIDEO_ROOT = 'data/nextqa/videos'
-    DURATIONS = 'data/nextqa/durations.json'
 
     SOURCE = 'nextgqa'
     DATA_TYPE = 'multimodal'
@@ -44,7 +42,6 @@ class NExTGQADataset(AnsweringDataset):
             raw_annos = [d for d in reader]
 
         video_id_map = nncore.load(self.VIDEO_ID_MAP)
-        durations = nncore.load(self.DURATIONS)
 
         annos = []
         for raw_anno in raw_annos:
@@ -63,7 +60,7 @@ class NExTGQADataset(AnsweringDataset):
                 source=self.SOURCE,
                 data_type=self.DATA_TYPE,
                 video_path=nncore.join(self.VIDEO_ROOT, video_id + '.mp4'),
-                duration=durations[video_id],
+                duration=raw_spans[vid]['duration'],
                 query=query,
                 question=question,
                 options=options,
