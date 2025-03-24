@@ -391,15 +391,21 @@ def parse_args():
 if __name__ == '__main__':
     args = parse_args()
 
-    assert args.pred_path.endswith('.jsonl')
+    if nncore.is_dir(args.pred_path):
+        log_file = nncore.join(args.pred_path, args.out_name)
+    else:
+        log_file = nncore.same_dir(args.pred_path, args.out_name)
 
-    log_file = nncore.same_dir(args.pred_path, args.out_name)
     nncore.set_default_logger(logger='eval', fmt=None, log_file=log_file)
 
-    pred_paths = nncore.ls(args.pred_path, ext=['json', 'jsonl'], join_path=True, sort=True)
-    nncore.log(f'Total number of files: {len(pred_paths)}\n')
+    if nncore.is_dir(args.pred_path):
+        pred_paths = nncore.ls(args.pred_path, ext=['json', 'jsonl'], join_path=True, sort=True)
+        nncore.log(f'Total number of files: {len(pred_paths)}\n')
+        preds = nncore.flatten([nncore.load(p) for p in pred_paths])
+    else:
+        nncore.log(f'Loading predictions from {args.pred_path}')
+        preds = nncore.load(args.pred_path)
 
-    preds = nncore.flatten([nncore.load(p) for p in pred_paths])
     annos = nncore.load(args.anno_path)
 
     res = qvhighlights_eval(preds, annos)['brief']

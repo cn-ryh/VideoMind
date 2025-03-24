@@ -8,7 +8,7 @@ export PYTHONPATH="./:$PYTHONPATH"
 
 model_gnd_path="model_zoo/VideoMind-2B-FT-QVHighlights"
 
-pred_path="outputs/qvhighlights"
+pred_path="outputs/qvhighlights_ft_val"
 
 IFS="," read -ra GPULIST <<< "${CUDA_VISIBLE_DEVICES:-0}"
 CHUNKS=${#GPULIST[@]}
@@ -31,7 +31,7 @@ python videomind/eval/metrics_qvhighlights.py $pred_path/hl_val_submission.jsonl
 
 # ==================== test split ====================
 
-# pred_path="outputs/qvhighlights_test"
+# pred_path="outputs/qvhighlights_ft_test"
 
 # IFS="," read -ra GPULIST <<< "${CUDA_VISIBLE_DEVICES:-0}"
 # CHUNKS=${#GPULIST[@]}
