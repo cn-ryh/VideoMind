@@ -98,7 +98,7 @@ def fetch_image(ele: dict[str, str | Image.Image], size_factor: int = IMAGE_FACT
     if image_obj is None:
         raise ValueError(f"Unrecognized image input, support local path, http url, base64 and PIL.Image, got {image}")
     image = image_obj.convert("RGB")
-    # resize
+
     if "resized_height" in ele and "resized_width" in ele:
         resized_height, resized_width = smart_resize(
             ele["resized_height"],
@@ -186,23 +186,28 @@ def _read_video_decord(ele: dict, ) -> torch.Tensor:
         total_frames, video_fps = video.shape[0], ele.get('fps', FPS)
     else:
         vr = decord.VideoReader(video_path, num_threads=ele.get('num_threads', 0))
-        # if 'video_start' in ele or 'video_end' in ele:
-        #     raise NotImplementedError("not support start_pts and end_pts in decord for now.")
         total_frames, video_fps = len(vr), vr.get_avg_fps()
 
     # 1. re-calculate total frames
-    # s = ele.get('video_start', 0)
-    # e = ele.get('video_end', total_frames / video_fps)
     s = ele.get('video_start')
     s = 0 if s is None else s
     e = ele.get('video_end')
     e = total_frames / video_fps if e is None else e
-    s_frame = max(0, round(s * video_fps))
-    e_frame = min(round(e * video_fps), total_frames - 1)
+    s_frame = min(max(0, round(s * video_fps)), total_frames - 1)
+    e_frame = min(max(0, round(e * video_fps)), total_frames - 1)
+    if s_frame > e_frame:
+        warnings.warn(f's_frame ({s_frame}) is greater than e_frame ({e_frame}), total_frames: {total_frames}')
+        s_frame, e_frame = e_frame, s_frame
+
+    # TODO: the actual total_frames shall be computed by e_frame - s_frame + 1
+    # but it would affect verifier's performance when video_start and video_end get clamped
+    # shall be fixed by using normalized timestamps instead of real time
     total_frames = (e - s) * video_fps
 
-    nframes = smart_nframes(ele, total_frames=total_frames, video_fps=video_fps)
-    # idx = torch.linspace(0, total_frames - 1, nframes).round().long().tolist()
+    if total_frames > FPS_MIN_FRAMES:
+        nframes = smart_nframes(ele, total_frames=total_frames, video_fps=video_fps)
+    else:
+        nframes = total_frames
 
     # 2. generate frame ids
     idx = torch.linspace(s_frame, e_frame, nframes).round().long().tolist()
@@ -332,11 +337,6 @@ def preprocess_chatml(input_ids, text, tokenizer):
 
         labels[cur_len:cur_len + ins_len] = IGNORE_INDEX
         cur_len += rou_len
-
-    # TODO: sometimes visual tokens are in the assistant round
-    # <|vision_start|> <|vision_end|> <|vision_pad|> <|image_pad|> <|video_pad|>
-    # for token_id in range(151652, 151657):
-    #     labels[labels == token_id] = IGNORE_INDEX
 
     if labels.size(0) != cur_len:
         warnings.warn(f'Tokenization mismatch: {labels.size(0)} and {cur_len}')
