@@ -173,6 +173,7 @@ class AgentQwen2VLForConditionalGeneration(Qwen2VLForConditionalGeneration):
         if mode == 'caching':
             self.cache_norm_state = self.model.norm.state
             self.reg = []
+            self.sal = []
 
         if mode == 'training' and timestamps is not None:
             loss_regs, avg_factors = [], []
@@ -313,12 +314,14 @@ class AgentQwen2VLForConditionalGeneration(Qwen2VLForConditionalGeneration):
                 out_coord = [self.coef(self.coord_head(e).exp(), i) for i, e in enumerate(pymid)]
                 out_coord = torch.cat(out_coord, dim=1)
 
+                sal = out_class[0]
                 bnd = out_coord[0]
+
                 bnd[:, 0] *= -1
                 bnd *= point[:, 3, None].repeat(1, 2)
                 bnd += point[:, 0, None].repeat(1, 2)
                 bnd /= t
-                bnd = torch.cat((bnd, out_class[0]), dim=-1)
+                bnd = torch.cat((bnd, sal), dim=-1)
 
                 _, inds = bnd[:, -1].sort(descending=True)
                 bnd = bnd[inds]
@@ -341,6 +344,9 @@ class AgentQwen2VLForConditionalGeneration(Qwen2VLForConditionalGeneration):
 
                 # save top-100 predictions
                 self.reg.append(bnd[:100])
+
+                # save all saliency scores
+                self.sal.append(sal)
 
         return outputs
 

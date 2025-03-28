@@ -364,7 +364,7 @@ if __name__ == '__main__':
 
             dump['agents'].append('answerer')
 
-            # choose the potential best prediction
+            # choose the potential best moment
             selected = pred[0] if 'pred' in dump else [0, duration]
 
             min_len = getattr(DATASETS.get(args.dataset), 'MIN_LEN', 32)

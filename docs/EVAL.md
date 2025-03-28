@@ -6,11 +6,13 @@ Please refer to [TRAIN.md](/docs/TRAIN.md) for setting up the environment.
 
 ## 📚 Checkpoint Preparation
 
-Download VideoMind checkpoints from [Hugging Face](https://huggingface.co/collections/yeliudev/videomind-67dd41f42c57f0e7433afb36) and place them into the `model_zoo` folder.
+Download the [base models](https://huggingface.co/collections/Qwen/qwen2-vl-66cee7455501d7126940800d) and [VideoMind checkpoints](https://huggingface.co/collections/yeliudev/videomind-67dd41f42c57f0e7433afb36), and place them into the `model_zoo` folder.
 
 ```
 VideoMind
 └─ model_zoo
+   ├─ Qwen2-VL-2B-Instruct
+   ├─ Qwen2-VL-7B-Instruct
    ├─ VideoMind-2B
    ├─ VideoMind-7B
    └─ VideoMind-2B-FT-QVHighlights

@@ -9,7 +9,7 @@
   <a href="https://videomind.github.io/"><img src="https://img.shields.io/badge/Project-Page-brightgreen"></a>
   <a href="https://huggingface.co/collections/yeliudev/videomind-67dd41f42c57f0e7433afb36"><img src="https://img.shields.io/badge/%F0%9F%A4%97%20Hugging%20Face-Model-blue"></a>
   <a href="https://huggingface.co/datasets/yeliudev/VideoMind-Dataset"><img src="https://img.shields.io/badge/%F0%9F%A4%97%20Hugging%20Face-Dataset-orange"></a>
-  <a href="/LICENSE"><img src="https://img.shields.io/badge/License-BSD--3--Clause-purple"></a>
+  <a href="https://huggingface.co/spaces/yeliudev/VideoMind-2B"><img src="https://huggingface.co/datasets/huggingface/badges/resolve/main/open-in-hf-spaces-sm-dark.svg"></a>
 </p>
 
 <p align="center">
@@ -21,11 +21,9 @@
 
 <p align="center"><img width="750" src=".github/method.jpg"></p>
 
-> [!NOTE]
-> The repo is under construction. More details about how to play with VideoMind will be released. Stay tuned!
-
 ## 🔥 News
 
+- **`2024.03.28`** 🚀 VideoMind-2B is ready on [Hugging Face Spaces](https://huggingface.co/spaces/yeliudev/VideoMind-2B). Check it out!
 - **`2024.03.21`** ⭐️ Code, model, and dataset release.
 - **`2025.03.17`** 🎉 Our [tech report](https://arxiv.org/abs/2503.13444) is available online.
 
