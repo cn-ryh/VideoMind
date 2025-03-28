@@ -44,7 +44,7 @@ See [TRAIN.md](/docs/TRAIN.md) for a quick start guide.
 
 See [EVAL.md](/docs/EVAL.md) for details about evaluating VideoMind on public benchmarks.
 
-## 🎮 Local Gradio Demo
+## 🕹️ Local Gradio Demo
 
 See [DEMO.md](/docs/DEMO.md) for details about how to deploy a Gradio demo locally.
 

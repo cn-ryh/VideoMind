@@ -572,7 +572,7 @@ if __name__ == '__main__':
 
     chat = gr.Chatbot(
         type='messages',
-        height='75vh',
+        height='70vh',
         avatar_images=[f'{path}/assets/user.png', f'{path}/assets/bot.png'],
         placeholder='A conversation with VideoMind',
         label='VideoMind')
@@ -594,11 +594,8 @@ if __name__ == '__main__':
                         value=['pla', 'gnd', 'ver', 'ans'],
                         interactive=True,
                         elem_id='role',
-                        label='Role(s) To Use',
-                        info='[Auto Planning]: Planner + Grounder + Verifier + Answerer<br>'
-                        '[Grounded Video Question-Answering]: Grounder + Verifier + Answerer<br>'
-                        '[Video Temporal Grounding]: Grounder + Verifier<br>'
-                        '[Direct Video Question-Answering]: Answerer<br>')
+                        label='Roles',
+                        info='Select the role(s) you would like to activate.')
                     role.change(update_placeholder, role, prompt)
 
                     with gr.Accordion(label='Hyperparameters', open=False):

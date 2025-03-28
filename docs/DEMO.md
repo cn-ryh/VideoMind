@@ -6,7 +6,7 @@ Please refer to [EVAL.md](/docs/EVAL.md) for setting up the environment and prep
 
 Example videos can be downloaded at [here](https://huggingface.co/spaces/yeliudev/VideoMind-2B/tree/main/data).
 
-## 🎮 Launch Demo
+## 🕹️ Launch Demo
 
 Run the following command to launch Gradio demo locally.
 
