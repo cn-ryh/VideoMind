@@ -48,11 +48,14 @@ BADGE = """
     <a href="https://github.com/yeliudev/VideoMind/blob/main/README.md" target="_blank">
         <img src="https://img.shields.io/badge/License-BSD--3--Clause-purple">
     </a>
+    <a href="https://github.com/yeliudev/VideoMind" target="_blank">
+        <img src="https://img.shields.io/github/stars/yeliudev/VideoMind">
+    </a>
 </div>
 """
 
 LOGO = '<p align="center"><img width="350" src="https://raw.githubusercontent.com/yeliudev/VideoMind/refs/heads/main/.github/logo.png"></p>'
-DISC = '**VideoMind** is a multi-modal agent framework that enhances video reasoning by emulating *human-like* processes, such as *breaking down tasks*, *localizing and verifying moments*, and *synthesizing answers*. Our method addresses the unique challenges of temporal-grounded reasoning in a progressive strategy. This demo showcases how VideoMind-2B handles video-language tasks. Please open an <a href="https://github.com/yeliudev/VideoMind/issues/new" target="_blank">issue</a> if you meet any problems.'  # noqa
+DISC = '**VideoMind** is a multi-modal agent framework that enhances video reasoning by emulating *human-like* processes, such as *breaking down tasks*, *localizing and verifying moments*, and *synthesizing answers*. This demo showcases how VideoMind-2B handles video-language tasks. Please open an <a href="https://github.com/yeliudev/VideoMind/issues/new" target="_blank">issue</a> if you meet any problems.'  # noqa
 
 # yapf:disable
 EXAMPLES = [
@@ -562,7 +565,7 @@ def main(video, prompt, role, temperature, max_new_tokens):
 def build_demo():
     chat = gr.Chatbot(
         type='messages',
-        height='70vh',
+        height='70em',
         avatar_images=[f'{PATH}/assets/user.png', f'{PATH}/assets/bot.png'],
         placeholder='A conversation with VideoMind',
         label='VideoMind')
@@ -570,7 +573,7 @@ def build_demo():
     prompt = gr.Textbox(label='Text Prompt', placeholder='Ask a question about the video...')
 
     with gr.Blocks(title=TITLE) as demo:
-        gr.Markdown(LOGO)
+        gr.HTML(LOGO)
         gr.HTML(BADGE)
         gr.Markdown(DISC)
 
@@ -606,11 +609,7 @@ def build_demo():
                             label='Max Output Tokens',
                             info='The maximum number of output tokens for each role (Default: 256)')
 
-                with gr.Group():
-                    prompt.render()
-
-                    with gr.Accordion(label='Examples', open=False):
-                        gr.Examples(examples=EXAMPLES, inputs=[video, prompt, role], examples_per_page=3)
+                prompt.render()
 
                 with gr.Row():
                     random_btn = gr.Button(value='🔮 Random')
@@ -624,7 +623,7 @@ def build_demo():
                     submit_ctx = submit_ctx.then(main, [video, prompt, role, temperature, max_new_tokens], chat)
                     submit_ctx.then(enable_btns, None, [random_btn, reset_btn, submit_btn])
 
-                gr.Markdown('Need example data? Explore examples tab or click 🔮 Random to sample one!')
+                gr.Examples(examples=EXAMPLES, inputs=[video, prompt, role], examples_per_page=3)
 
             with gr.Column(scale=5):
                 chat.render()
