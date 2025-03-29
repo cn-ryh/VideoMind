@@ -1,4 +1,4 @@
-# Copyright (c) Ye Liu. Licensed under the BSD 3-Clause License.
+# Copyright (c) 2025 Ye Liu. Licensed under the BSD-3-Clause License.
 
 import random
 

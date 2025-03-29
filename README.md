@@ -1,8 +1,8 @@
 <p align="center">
-  <img width="100" src=".github/icon.png">
+  <img width="400" src=".github/logo.png">
 </p>
 
-<h1 align="center">VideoMind: A Chain-of-LoRA Agent for Long Video Reasoning</h1>
+<h2 align="center">VideoMind: A Chain-of-LoRA Agent for Long Video Reasoning</h2>
 
 <p align="center">
   <a href="https://arxiv.org/abs/2503.13444"><img src="https://img.shields.io/badge/arXiv-2503.13444-red"></a>

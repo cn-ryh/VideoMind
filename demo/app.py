@@ -1,4 +1,4 @@
-# Copyright (c) 2024 Ye Liu. Licensed under the BSD-3-Clause license.
+# Copyright (c) 2025 Ye Liu. Licensed under the BSD-3-Clause license.
 
 import html
 import json
@@ -28,7 +28,7 @@ MODEL_HF = 'yeliudev/VideoMind-2B'
 
 TITLE = 'VideoMind: A Chain-of-LoRA Agent for Long Video Reasoning'
 
-TITLE_MD = f'<h1 align="center">💡 {TITLE}</h1>'
+LOGO_MD = '<p align="center"><img width="350" src="https://raw.githubusercontent.com/yeliudev/VideoMind/refs/heads/main/.github/logo.png"></p>'
 DESCRIPTION_MD = """VideoMind is a multi-modal agent framework that enhances video reasoning by emulating *human-like* processes, such as *breaking down tasks*, *localizing and verifying moments*, and *synthesizing answers*. This approach addresses the unique challenges of temporal-grounded reasoning in a progressive strategy. Please find more details at our <a href="https://videomind.github.io/" target="_blank">Project Page</a>, <a href="https://arxiv.org/abs/2503.13444" target="_blank">Tech Report</a> and <a href="https://github.com/yeliudev/VideoMind" target="_blank">GitHub Repo</a>."""  # noqa
 
 # yapf:disable
@@ -580,7 +580,7 @@ if __name__ == '__main__':
     prompt = gr.Textbox(label='Text Prompt', placeholder='Ask a question about the video...')
 
     with gr.Blocks(title=TITLE, css=CSS, js=JS) as demo:
-        gr.Markdown(TITLE_MD)
+        gr.Markdown(LOGO_MD)
         gr.Markdown(DESCRIPTION_MD)
 
         with gr.Row():
