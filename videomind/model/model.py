@@ -18,6 +18,10 @@ from .generator import PointGenerator
 from .loss import BundleLoss
 
 
+def cache_state_hook(module, args):
+    module.state = args[0]
+
+
 class AgentQwen2VLConfig(Qwen2VLConfig):
     model_type = 'agent_qwen2_vl'
 
@@ -52,7 +56,7 @@ class AgentQwen2VLModel(Qwen2VLModel):
 
     def __init__(self, config):
         super().__init__(config)
-        self.norm.register_forward_pre_hook(lambda module, args: setattr(module, 'state', args[0]))
+        self.norm.register_forward_pre_hook(cache_state_hook)
 
     def forward(self, input_ids=None, inputs_embeds=None, **kwargs):
         # ensure gradient tracking (in case that embed_tokens has been frozen)

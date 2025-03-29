@@ -5,14 +5,12 @@ import json
 import os
 import random
 import time
-from functools import partial
-from threading import Thread
 
 import gradio as gr
 import nncore
+import spaces
 import torch
 from huggingface_hub import snapshot_download
-from transformers import TextIteratorStreamer
 
 from videomind.constants import GROUNDER_PROMPT, PLANNER_PROMPT, VERIFIER_PROMPT
 from videomind.dataset.utils import process_vision_info
@@ -20,89 +18,89 @@ from videomind.model.builder import build_model
 from videomind.utils.io import get_duration
 from videomind.utils.parser import parse_query, parse_span
 
+os.environ['TOKENIZERS_PARALLELISM'] = 'false'
+
+PATH = os.path.abspath(os.path.dirname(os.path.realpath(__file__)))
+
 BASE_MODEL = 'model_zoo/Qwen2-VL-2B-Instruct'
-BASE_MODEL_HF = 'Qwen/Qwen2-VL-2B-Instruct'
+BASE_MODEL_REPO = 'Qwen/Qwen2-VL-2B-Instruct'
 
 MODEL = 'model_zoo/VideoMind-2B'
-MODEL_HF = 'yeliudev/VideoMind-2B'
+MODEL_REPO = 'yeliudev/VideoMind-2B'
 
 TITLE = 'VideoMind: A Chain-of-LoRA Agent for Long Video Reasoning'
 
-LOGO_MD = '<p align="center"><img width="350" src="https://raw.githubusercontent.com/yeliudev/VideoMind/refs/heads/main/.github/logo.png"></p>'
-DESCRIPTION_MD = """VideoMind is a multi-modal agent framework that enhances video reasoning by emulating *human-like* processes, such as *breaking down tasks*, *localizing and verifying moments*, and *synthesizing answers*. This approach addresses the unique challenges of temporal-grounded reasoning in a progressive strategy. Please find more details at our <a href="https://videomind.github.io/" target="_blank">Project Page</a>, <a href="https://arxiv.org/abs/2503.13444" target="_blank">Tech Report</a> and <a href="https://github.com/yeliudev/VideoMind" target="_blank">GitHub Repo</a>."""  # noqa
+BADGE = """
+<h3 align="center" style="margin-top: -0.5em;">A Chain-of-LoRA Agent for Long Video Reasoning</h3>
+<div style="display: flex; justify-content: center; gap: 5px; margin-bottom: -0.7em !important;">
+    <a href="https://arxiv.org/abs/2503.13444" target="_blank">
+        <img src="https://img.shields.io/badge/arXiv-2503.13444-red">
+    </a>
+    <a href="https://videomind.github.io/" target="_blank">
+        <img src="https://img.shields.io/badge/Project-Page-brightgreen">
+    </a>
+    <a href="https://huggingface.co/collections/yeliudev/videomind-67dd41f42c57f0e7433afb36" target="_blank">
+        <img src="https://img.shields.io/badge/%F0%9F%A4%97%20Hugging%20Face-Model-blue">
+    </a>
+    <a href="https://huggingface.co/datasets/yeliudev/VideoMind-Dataset" target="_blank">
+        <img src="https://img.shields.io/badge/%F0%9F%A4%97%20Hugging%20Face-Dataset-orange">
+    </a>
+    <a href="https://github.com/yeliudev/VideoMind/blob/main/README.md" target="_blank">
+        <img src="https://img.shields.io/badge/License-BSD--3--Clause-purple">
+    </a>
+</div>
+"""
+
+LOGO = '<p align="center"><img width="350" src="https://raw.githubusercontent.com/yeliudev/VideoMind/refs/heads/main/.github/logo.png"></p>'
+DISC = '**VideoMind** is a multi-modal agent framework that enhances video reasoning by emulating *human-like* processes, such as *breaking down tasks*, *localizing and verifying moments*, and *synthesizing answers*. Our method addresses the unique challenges of temporal-grounded reasoning in a progressive strategy. This demo showcases how VideoMind-2B handles video-language tasks. Please open an <a href="https://github.com/yeliudev/VideoMind/issues/new" target="_blank">issue</a> if you meet any problems.'  # noqa
 
 # yapf:disable
 EXAMPLES = [
-    ('data/4167294363.mp4', 'Why did the old man stand up?', ['pla', 'gnd', 'ver', 'ans']),
-    ('data/5012237466.mp4', 'How does the child in stripes react about the fountain?', ['pla', 'gnd', 'ver', 'ans']),
-    ('data/13887487955.mp4', 'What did the excavator do after it pushed the cement forward?', ['pla', 'gnd', 'ver', 'ans']),
-    ('data/5188348585.mp4', 'What did the person do before pouring the liquor?', ['pla', 'gnd', 'ver', 'ans']),
-    ('data/4766274786.mp4', 'What did the girl do after the baby lost the balloon?', ['pla', 'gnd', 'ver', 'ans']),
-    ('data/4742652230.mp4', 'Why is the girl pushing the boy only around the toy but not to other places?', ['pla', 'gnd', 'ver', 'ans']),
-    ('data/9383140374.mp4', 'How does the girl in pink control the movement of the claw?', ['pla', 'gnd', 'ver', 'ans']),
-    ('data/10309844035.mp4', 'Why are they holding up the phones?', ['pla', 'gnd', 'ver', 'ans']),
-    ('data/pA6Z-qYhSNg_60.0_210.0.mp4', 'Different types of meat products are being cut, shaped and prepared', ['gnd', 'ver']),
-    ('data/UFWQKrcbhjI_360.0_510.0.mp4', 'A man talks to the camera whilst walking along a roadside in a rural area', ['gnd', 'ver']),
-    ('data/RoripwjYFp8_210.0_360.0.mp4', 'A woman wearing glasses eating something at a street market', ['gnd', 'ver']),
-    ('data/h6QKDqomIPk_210.0_360.0.mp4', 'A toddler sits in his car seat, holding his yellow tablet', ['gnd', 'ver']),
-    ('data/Z3-IZ3HAmIA_60.0_210.0.mp4', 'A view from the window as the plane accelerates and takes off from the runway', ['gnd', 'ver']),
-    ('data/yId2wIocTys_210.0_360.0.mp4', "Temporally locate the visual content mentioned in the text query 'kids exercise in front of parked cars' within the video.", ['pla', 'gnd', 'ver']),
-    ('data/rrTIeJRVGjg_60.0_210.0.mp4', "Localize the moment that provides relevant context about 'man stands in front of a white building monologuing'.", ['pla', 'gnd', 'ver']),
-    ('data/DTInxNfWXVc_210.0_360.0.mp4', "Find the video segment that corresponds to the given textual query 'man with headphones talking'.", ['pla', 'gnd', 'ver']),
+    [f'{PATH}/examples/4167294363.mp4', 'Why did the old man stand up?', ['pla', 'gnd', 'ver', 'ans']],
+    [f'{PATH}/examples/5012237466.mp4', 'How does the child in stripes react about the fountain?', ['pla', 'gnd', 'ver', 'ans']],
+    [f'{PATH}/examples/13887487955.mp4', 'What did the excavator do after it pushed the cement forward?', ['pla', 'gnd', 'ver', 'ans']],
+    [f'{PATH}/examples/5188348585.mp4', 'What did the person do before pouring the liquor?', ['pla', 'gnd', 'ver', 'ans']],
+    [f'{PATH}/examples/4766274786.mp4', 'What did the girl do after the baby lost the balloon?', ['pla', 'gnd', 'ver', 'ans']],
+    [f'{PATH}/examples/4742652230.mp4', 'Why is the girl pushing the boy only around the toy but not to other places?', ['pla', 'gnd', 'ver', 'ans']],
+    [f'{PATH}/examples/9383140374.mp4', 'How does the girl in pink control the movement of the claw?', ['pla', 'gnd', 'ver', 'ans']],
+    [f'{PATH}/examples/10309844035.mp4', 'Why are they holding up the phones?', ['pla', 'gnd', 'ver', 'ans']],
+    [f'{PATH}/examples/pA6Z-qYhSNg_60.0_210.0.mp4', 'Different types of meat products are being cut, shaped and prepared', ['gnd', 'ver']],
+    [f'{PATH}/examples/UFWQKrcbhjI_360.0_510.0.mp4', 'A man talks to the camera whilst walking along a roadside in a rural area', ['gnd', 'ver']],
+    [f'{PATH}/examples/RoripwjYFp8_210.0_360.0.mp4', 'A woman wearing glasses eating something at a street market', ['gnd', 'ver']],
+    [f'{PATH}/examples/h6QKDqomIPk_210.0_360.0.mp4', 'A toddler sits in his car seat, holding his yellow tablet', ['gnd', 'ver']],
+    [f'{PATH}/examples/Z3-IZ3HAmIA_60.0_210.0.mp4', 'A view from the window as the plane accelerates and takes off from the runway', ['gnd', 'ver']],
+    [f'{PATH}/examples/yId2wIocTys_210.0_360.0.mp4', "Temporally locate the visual content mentioned in the text query 'kids exercise in front of parked cars' within the video.", ['pla', 'gnd', 'ver']],
+    [f'{PATH}/examples/rrTIeJRVGjg_60.0_210.0.mp4', "Localize the moment that provides relevant context about 'man stands in front of a white building monologuing'.", ['pla', 'gnd', 'ver']],
+    [f'{PATH}/examples/DTInxNfWXVc_210.0_360.0.mp4', "Find the video segment that corresponds to the given textual query 'man with headphones talking'.", ['pla', 'gnd', 'ver']],
 ]
 # yapf:enable
 
-CSS = """button .box { text-align: left }"""
+if not nncore.is_dir(BASE_MODEL):
+    snapshot_download(BASE_MODEL_REPO, local_dir=BASE_MODEL)
 
-JS = """
-function init() {
-    var info = document.getElementById('role').querySelectorAll('[class^="svelte"]')[1]
-    info.innerHTML = info.innerHTML.replace(/&lt;/g, '<').replace(/&gt;/g, '>')
-}
-"""
+if not nncore.is_dir(MODEL):
+    snapshot_download(MODEL_REPO, local_dir=MODEL)
 
+print('Initializing role *grounder*')
+model, processor = build_model(MODEL)
 
-class CustomStreamer(TextIteratorStreamer):
+print('Initializing role *planner*')
+model.load_adapter(nncore.join(MODEL, 'planner'), adapter_name='planner')
 
-    def put(self, value):
-        if len(value.shape) > 1 and value.shape[0] > 1:
-            raise ValueError('TextStreamer only supports batch size 1')
-        elif len(value.shape) > 1:
-            value = value[0]
+print('Initializing role *verifier*')
+model.load_adapter(nncore.join(MODEL, 'verifier'), adapter_name='verifier')
 
-        if self.skip_prompt and self.next_tokens_are_prompt:
-            self.next_tokens_are_prompt = False
-            return
-
-        self.token_cache.extend(value.tolist())
-
-        # force skipping eos token
-        if self.token_cache[-1] == self.tokenizer.eos_token_id:
-            self.token_cache = self.token_cache[:-1]
-
-        text = self.tokenizer.decode(self.token_cache, **self.decode_kwargs)
-
-        # cache decoded text for future use
-        self.text_cache = text
-
-        if text.endswith('\n'):
-            printable_text = text[self.print_len:]
-            self.token_cache = []
-            self.print_len = 0
-        elif len(text) > 0 and self._is_chinese_char(ord(text[-1])):
-            printable_text = text[self.print_len:]
-            self.print_len += len(printable_text)
-        else:
-            printable_text = text[self.print_len:text.rfind(' ') + 1]
-            self.print_len += len(printable_text)
-
-        self.on_finalized_text(printable_text)
+device = torch.device('cuda')
 
 
 def seconds_to_hms(seconds):
     hours, remainder = divmod(round(seconds), 3600)
     minutes, seconds = divmod(remainder, 60)
     return f'{hours:02}:{minutes:02}:{seconds:02}'
+
+
+def random_sample():
+    return random.choice(EXAMPLES)
 
 
 def enable_btns():
@@ -118,7 +116,14 @@ def update_placeholder(role):
     return gr.Textbox(placeholder=placeholder)
 
 
-def main(video, prompt, role, temperature, max_new_tokens, model, processor, streamer, device):
+def reset_components():
+    return ['pla', 'gnd', 'ver', 'ans'], 0, 256
+
+
+@spaces.GPU
+def main(video, prompt, role, temperature, max_new_tokens):
+    global model, processor, device
+
     history = []
 
     if not video:
@@ -143,6 +148,8 @@ def main(video, prompt, role, temperature, max_new_tokens, model, processor, str
 
     history.append({'role': 'user', 'content': prompt})
     yield history
+
+    model = model.to(device)
 
     duration = get_duration(video)
 
@@ -194,9 +201,8 @@ def main(video, prompt, role, temperature, max_new_tokens, model, processor, str
         model.base_model.enable_adapter_layers()
         model.set_adapter('planner')
 
-        generation_kwargs = dict(
+        output_ids = model.generate(
             **data,
-            streamer=streamer,
             do_sample=temperature > 0,
             temperature=temperature if temperature > 0 else None,
             top_p=None,
@@ -204,15 +210,18 @@ def main(video, prompt, role, temperature, max_new_tokens, model, processor, str
             repetition_penalty=None,
             max_new_tokens=max_new_tokens)
 
-        t = Thread(target=model.generate, kwargs=generation_kwargs)
-        t.start()
+        assert data.input_ids.size(0) == output_ids.size(0) == 1
+        output_ids = output_ids[0, data.input_ids.size(1):]
+        if output_ids[-1] == processor.tokenizer.eos_token_id:
+            output_ids = output_ids[:-1]
+        response = processor.decode(output_ids, clean_up_tokenization_spaces=False)
 
-        skipped = False
-        for i, text in enumerate(streamer):
-            if text and not skipped:
+        for i, text in enumerate(response.split(' ')):
+            if i == 0:
                 history[-1]['content'] = history[-1]['content'].rstrip('.')
-                skipped = True
-            history[-1]['content'] += text
+                history[-1]['content'] += text
+            else:
+                history[-1]['content'] += ' ' + text
             yield history
 
         elapsed_time = round(time.perf_counter() - start_time, 1)
@@ -220,7 +229,7 @@ def main(video, prompt, role, temperature, max_new_tokens, model, processor, str
         yield history
 
         try:
-            parsed = json.loads(streamer.text_cache)
+            parsed = json.loads(response)
             action = parsed[0] if isinstance(parsed, list) else parsed
             if action['type'].lower() == 'grounder' and action['value']:
                 query = action['value']
@@ -291,9 +300,8 @@ def main(video, prompt, role, temperature, max_new_tokens, model, processor, str
         model.base_model.enable_adapter_layers()
         model.set_adapter('grounder')
 
-        generation_kwargs = dict(
+        output_ids = model.generate(
             **data,
-            streamer=streamer,
             do_sample=temperature > 0,
             temperature=temperature if temperature > 0 else None,
             top_p=None,
@@ -301,15 +309,18 @@ def main(video, prompt, role, temperature, max_new_tokens, model, processor, str
             repetition_penalty=None,
             max_new_tokens=max_new_tokens)
 
-        t = Thread(target=model.generate, kwargs=generation_kwargs)
-        t.start()
+        assert data.input_ids.size(0) == output_ids.size(0) == 1
+        output_ids = output_ids[0, data.input_ids.size(1):]
+        if output_ids[-1] == processor.tokenizer.eos_token_id:
+            output_ids = output_ids[:-1]
+        response = processor.decode(output_ids, clean_up_tokenization_spaces=False)
 
-        skipped = False
-        for i, text in enumerate(streamer):
-            if text and not skipped:
+        for i, text in enumerate(response.split(' ')):
+            if i == 0:
                 history[-1]['content'] = history[-1]['content'].rstrip('.')
-                skipped = True
-            history[-1]['content'] += text
+                history[-1]['content'] += text
+            else:
+                history[-1]['content'] += ' ' + text
             yield history
 
         elapsed_time = round(time.perf_counter() - start_time, 1)
@@ -510,9 +521,8 @@ def main(video, prompt, role, temperature, max_new_tokens, model, processor, str
         data = data.to(device)
 
         with model.disable_adapter():
-            generation_kwargs = dict(
+            output_ids = model.generate(
                 **data,
-                streamer=streamer,
                 do_sample=temperature > 0,
                 temperature=temperature if temperature > 0 else None,
                 top_p=None,
@@ -520,25 +530,28 @@ def main(video, prompt, role, temperature, max_new_tokens, model, processor, str
                 repetition_penalty=None,
                 max_new_tokens=max_new_tokens)
 
-            t = Thread(target=model.generate, kwargs=generation_kwargs)
-            t.start()
+        assert data.input_ids.size(0) == output_ids.size(0) == 1
+        output_ids = output_ids[0, data.input_ids.size(1):]
+        if output_ids[-1] == processor.tokenizer.eos_token_id:
+            output_ids = output_ids[:-1]
+        response = processor.decode(output_ids, clean_up_tokenization_spaces=False)
 
-            skipped = False
-            for i, text in enumerate(streamer):
-                if text and not skipped:
-                    history[-1]['content'] = history[-1]['content'].rstrip('.')
-                    skipped = True
+        for i, text in enumerate(response.split(' ')):
+            if i == 0:
+                history[-1]['content'] = history[-1]['content'].rstrip('.')
                 history[-1]['content'] += text
-                yield history
+            else:
+                history[-1]['content'] += ' ' + text
+            yield history
 
         elapsed_time = round(time.perf_counter() - start_time, 1)
         history[-1]['metadata']['title'] += f' ({elapsed_time} seconds)'
         yield history
 
         if 'gnd' in role and do_grounding:
-            response = f'After zooming in and analyzing the target moment, I finalize my answer: <span style="color:green">{streamer.text_cache}</span>'
+            response = f'After zooming in and analyzing the target moment, I finalize my answer: <span style="color:green">{response}</span>'
         else:
-            response = f'After watching the whole video, my answer is: <span style="color:green">{streamer.text_cache}</span>'
+            response = f'After watching the whole video, my answer is: <span style="color:green">{response}</span>'
 
         history.append({'role': 'assistant', 'content': ''})
         for i, text in enumerate(response.split(' ')):
@@ -546,42 +559,20 @@ def main(video, prompt, role, temperature, max_new_tokens, model, processor, str
             yield history
 
 
-if __name__ == '__main__':
-    if not nncore.is_dir(BASE_MODEL):
-        snapshot_download(BASE_MODEL_HF, local_dir=BASE_MODEL)
-
-    if not nncore.is_dir(MODEL):
-        snapshot_download(MODEL_HF, local_dir=MODEL)
-
-    print('Initializing role *grounder*')
-    model, processor = build_model(MODEL)
-
-    print('Initializing role *planner*')
-    model.load_adapter(nncore.join(MODEL, 'planner'), adapter_name='planner')
-
-    print('Initializing role *verifier*')
-    model.load_adapter(nncore.join(MODEL, 'verifier'), adapter_name='verifier')
-
-    streamer = CustomStreamer(processor.tokenizer, skip_prompt=True)
-
-    device = next(model.parameters()).device
-
-    main = partial(main, model=model, processor=processor, streamer=streamer, device=device)
-
-    path = os.path.dirname(os.path.realpath(__file__))
-
+def build_demo():
     chat = gr.Chatbot(
         type='messages',
         height='70vh',
-        avatar_images=[f'{path}/assets/user.png', f'{path}/assets/bot.png'],
+        avatar_images=[f'{PATH}/assets/user.png', f'{PATH}/assets/bot.png'],
         placeholder='A conversation with VideoMind',
         label='VideoMind')
 
     prompt = gr.Textbox(label='Text Prompt', placeholder='Ask a question about the video...')
 
-    with gr.Blocks(title=TITLE, css=CSS, js=JS) as demo:
-        gr.Markdown(LOGO_MD)
-        gr.Markdown(DESCRIPTION_MD)
+    with gr.Blocks(title=TITLE) as demo:
+        gr.Markdown(LOGO)
+        gr.HTML(BADGE)
+        gr.Markdown(DISC)
 
         with gr.Row():
             with gr.Column(scale=3):
@@ -615,22 +606,34 @@ if __name__ == '__main__':
                             label='Max Output Tokens',
                             info='The maximum number of output tokens for each role (Default: 256)')
 
-                prompt.render()
+                with gr.Group():
+                    prompt.render()
+
+                    with gr.Accordion(label='Examples', open=False):
+                        gr.Examples(examples=EXAMPLES, inputs=[video, prompt, role], examples_per_page=3)
 
                 with gr.Row():
                     random_btn = gr.Button(value='🔮 Random')
-                    random_btn.click(lambda: random.choice(EXAMPLES), None, [video, prompt, role])
+                    random_btn.click(random_sample, None, [video, prompt, role])
 
                     reset_btn = gr.ClearButton([video, prompt, chat], value='🗑️ Reset')
-                    reset_btn.click(lambda: (['pla', 'gnd', 'ver', 'ans'], 0, 256), None,
-                                    [role, temperature, max_new_tokens])
+                    reset_btn.click(reset_components, None, [role, temperature, max_new_tokens])
 
                     submit_btn = gr.Button(value='🚀 Submit', variant='primary')
                     submit_ctx = submit_btn.click(disable_btns, None, [random_btn, reset_btn, submit_btn])
                     submit_ctx = submit_ctx.then(main, [video, prompt, role, temperature, max_new_tokens], chat)
                     submit_ctx.then(enable_btns, None, [random_btn, reset_btn, submit_btn])
 
+                gr.Markdown('Need example data? Explore examples tab or click 🔮 Random to sample one!')
+
             with gr.Column(scale=5):
                 chat.render()
 
-        demo.launch(server_name='0.0.0.0')
+    return demo
+
+
+if __name__ == '__main__':
+    demo = build_demo()
+
+    demo.queue()
+    demo.launch(server_name='0.0.0.0', allowed_paths=[f'{PATH}/assets', f'{PATH}/examples'])
