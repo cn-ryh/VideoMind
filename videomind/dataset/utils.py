@@ -202,12 +202,9 @@ def _read_video_decord(ele: dict, ) -> torch.Tensor:
     # TODO: the actual total_frames shall be computed by e_frame - s_frame + 1
     # but it would affect verifier's performance when video_start and video_end get clamped
     # shall be fixed by using normalized timestamps instead of real time
-    total_frames = min(max(1, round((e - s) * video_fps)), total_frames)
+    total_frames = min(max(FPS_MIN_FRAMES, round((e - s) * video_fps)), total_frames)
 
-    if total_frames > FPS_MIN_FRAMES:
-        nframes = smart_nframes(ele, total_frames=total_frames, video_fps=video_fps)
-    else:
-        nframes = total_frames
+    nframes = smart_nframes(ele, total_frames=total_frames, video_fps=video_fps)
 
     # 2. generate frame ids
     idx = torch.linspace(s_frame, e_frame, nframes).round().long().tolist()
