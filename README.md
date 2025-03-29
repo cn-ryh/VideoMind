@@ -1,5 +1,5 @@
 <p align="center">
-  <img width="400" src=".github/logo.png">
+  <img width="350" src=".github/logo.png">
 </p>
 
 <h2 align="center">VideoMind: A Chain-of-LoRA Agent for Long Video Reasoning</h2>
