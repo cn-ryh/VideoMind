@@ -11,6 +11,10 @@ Example videos can be downloaded at [here](https://huggingface.co/spaces/yeliude
 Run the following command to launch Gradio demo locally.
 
 ```shell
+# Set Python path
+export PYTHONPATH="./:$PYTHONPATH"
+
+# Launch demo
 python demo/app.py
 ```
 
