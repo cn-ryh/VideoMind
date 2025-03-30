@@ -60,3 +60,5 @@ Please kindly cite our paper if you find this project helpful.
   year={2025}
 }
 ```
+
+[![Star History Chart](https://api.star-history.com/svg?repos=yeliudev/VideoMind&type=Timeline)](https://www.star-history.com/#yeliudev/VideoMind&Timeline)
