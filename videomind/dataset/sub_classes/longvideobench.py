@@ -13,7 +13,7 @@ class LongVideoBenchDataset(Dataset):
     ANNO_PATH_VALID = 'data/longvideobench/lvb_val.json'
     ANNO_PATH_TEST = 'data/longvideobench/lvb_test_wo_gt.json'
 
-    VIDEO_ROOT = 'data/longvideobench/videos_3fps_480_noaudio'
+    VIDEO_ROOT = 'data/longvideobench/videos'
 
     @classmethod
     def load_annos(self, split='valid'):
