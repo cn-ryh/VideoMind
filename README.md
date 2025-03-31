@@ -41,7 +41,7 @@ See our [dataset repo](https://huggingface.co/datasets/yeliudev/VideoMind-Datase
 
 ## 🚀 Training
 
-Our codebase supports training and testing on [27 video grounding / QA datasets](https://github.com/yeliudev/VideoMind/blob/main/videomind/dataset/sub_classes) with the following features.
+Our codebase supports training and evaluating on [27 video datasets and benchmarks](https://github.com/yeliudev/VideoMind/blob/main/videomind/dataset/sub_classes) with the following features.
 
 - Flexible hardware settings: NVIDIA GPU / Ascend NPU, Single-Node / Multi-Node
 - Efficient training techniques: DeepSpeed ZeRO, BF16, LoRA, SDPA, FlashAttention2, Liger-Kernel
