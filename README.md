@@ -27,6 +27,18 @@
 - **`2024.03.21`** ⭐️ Code, model, and dataset release.
 - **`2025.03.17`** 🎉 Our [tech report](https://arxiv.org/abs/2503.13444) is available online.
 
+## 🕹️ Gradio Demo
+
+https://github.com/user-attachments/assets/a4d99c05-aa73-4ed9-a275-2362a201bfec
+
+Play with our [online demo](https://huggingface.co/spaces/yeliudev/VideoMind-2B) or see [DEMO.md](/docs/DEMO.md) for guidelines about how to deploy it locally.
+
+## 📦 Datasets
+
+We provide raw videos, compressed videos, and pre-processed annotations of **27 video grounding / QA datasets**, including our **VideoMind-SFT** (481K) for training and multiple benchmarks for evaluation. We also release the datasets used during our early exploration (but not included in the final version) to facilitate future research.
+
+See our [dataset repo](https://huggingface.co/datasets/yeliudev/VideoMind-Dataset) for more details.
+
 ## 🚀 Training
 
 Our codebase supports training and testing on [27 video grounding / QA datasets](https://github.com/yeliudev/VideoMind/blob/main/videomind/dataset/sub_classes) with the following features.
@@ -43,10 +55,6 @@ See [TRAIN.md](/docs/TRAIN.md) for a quick start guide.
 ## 🔮 Evaluation
 
 See [EVAL.md](/docs/EVAL.md) for details about evaluating VideoMind on public benchmarks.
-
-## 🕹️ Local Gradio Demo
-
-See [DEMO.md](/docs/DEMO.md) for details about how to deploy a Gradio demo locally.
 
 ## 📖 Citation
 
