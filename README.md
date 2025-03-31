@@ -5,11 +5,11 @@
 <h2 align="center">VideoMind: A Chain-of-LoRA Agent for Long Video Reasoning</h2>
 
 <p align="center">
-  <a href="https://arxiv.org/abs/2503.13444"><img src="https://img.shields.io/badge/arXiv-2503.13444-red"></a>
-  <a href="https://videomind.github.io/"><img src="https://img.shields.io/badge/Project-Page-brightgreen"></a>
-  <a href="https://huggingface.co/collections/yeliudev/videomind-67dd41f42c57f0e7433afb36"><img src="https://img.shields.io/badge/%F0%9F%A4%97%20Hugging%20Face-Model-blue"></a>
-  <a href="https://huggingface.co/datasets/yeliudev/VideoMind-Dataset"><img src="https://img.shields.io/badge/%F0%9F%A4%97%20Hugging%20Face-Dataset-orange"></a>
-  <a href="https://huggingface.co/spaces/yeliudev/VideoMind-2B"><img src="https://huggingface.co/datasets/huggingface/badges/resolve/main/open-in-hf-spaces-sm-dark.svg"></a>
+  <a href="https://arxiv.org/abs/2503.13444" target="_blank"><img src="https://img.shields.io/badge/arXiv-2503.13444-red"></a>
+  <a href="https://videomind.github.io/" target="_blank"><img src="https://img.shields.io/badge/Project-Page-brightgreen"></a>
+  <a href="https://huggingface.co/collections/yeliudev/videomind-67dd41f42c57f0e7433afb36" target="_blank"><img src="https://img.shields.io/badge/%F0%9F%A4%97%20Hugging%20Face-Model-blue"></a>
+  <a href="https://huggingface.co/datasets/yeliudev/VideoMind-Dataset" target="_blank"><img src="https://img.shields.io/badge/%F0%9F%A4%97%20Hugging%20Face-Dataset-orange"></a>
+  <a href="https://huggingface.co/spaces/yeliudev/VideoMind-2B" target="_blank"><img src="https://huggingface.co/datasets/huggingface/badges/resolve/main/open-in-hf-spaces-sm-dark.svg"></a>
 </p>
 
 <p align="center">

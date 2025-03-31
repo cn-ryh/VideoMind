@@ -33,29 +33,17 @@ TITLE = 'VideoMind: A Chain-of-LoRA Agent for Long Video Reasoning'
 BADGE = """
 <h3 align="center" style="margin-top: -0.5em;">A Chain-of-LoRA Agent for Long Video Reasoning</h3>
 <div style="display: flex; justify-content: center; gap: 5px; margin-bottom: -0.7em !important;">
-    <a href="https://arxiv.org/abs/2503.13444" target="_blank">
-        <img src="https://img.shields.io/badge/arXiv-2503.13444-red">
-    </a>
-    <a href="https://videomind.github.io/" target="_blank">
-        <img src="https://img.shields.io/badge/Project-Page-brightgreen">
-    </a>
-    <a href="https://huggingface.co/collections/yeliudev/videomind-67dd41f42c57f0e7433afb36" target="_blank">
-        <img src="https://img.shields.io/badge/%F0%9F%A4%97%20Hugging%20Face-Model-blue">
-    </a>
-    <a href="https://huggingface.co/datasets/yeliudev/VideoMind-Dataset" target="_blank">
-        <img src="https://img.shields.io/badge/%F0%9F%A4%97%20Hugging%20Face-Dataset-orange">
-    </a>
-    <a href="https://github.com/yeliudev/VideoMind/blob/main/README.md" target="_blank">
-        <img src="https://img.shields.io/badge/License-BSD--3--Clause-purple">
-    </a>
-    <a href="https://github.com/yeliudev/VideoMind" target="_blank">
-        <img src="https://img.shields.io/github/stars/yeliudev/VideoMind">
-    </a>
+    <a href="https://arxiv.org/abs/2503.13444" target="_blank"><img src="https://img.shields.io/badge/arXiv-2503.13444-red"></a>
+    <a href="https://videomind.github.io/" target="_blank"><img src="https://img.shields.io/badge/Project-Page-brightgreen"></a>
+    <a href="https://huggingface.co/collections/yeliudev/videomind-67dd41f42c57f0e7433afb36" target="_blank"><img src="https://img.shields.io/badge/%F0%9F%A4%97%20Hugging%20Face-Model-blue"></a>
+    <a href="https://huggingface.co/datasets/yeliudev/VideoMind-Dataset" target="_blank"><img src="https://img.shields.io/badge/%F0%9F%A4%97%20Hugging%20Face-Dataset-orange"></a>
+    <a href="https://github.com/yeliudev/VideoMind/blob/main/README.md" target="_blank"><img src="https://img.shields.io/badge/License-BSD--3--Clause-purple"></a>
+    <a href="https://github.com/yeliudev/VideoMind" target="_blank"><img src="https://img.shields.io/github/stars/yeliudev/VideoMind"></a>
 </div>
 """
 
 LOGO = '<p align="center"><img width="350" src="https://raw.githubusercontent.com/yeliudev/VideoMind/refs/heads/main/.github/logo.png"></p>'
-DISC = '**VideoMind** is a multi-modal agent framework that enhances video reasoning by emulating *human-like* processes, such as *breaking down tasks*, *localizing and verifying moments*, and *synthesizing answers*. This demo showcases how VideoMind-2B handles video-language tasks. Please open an <a href="https://github.com/yeliudev/VideoMind/issues/new" target="_blank">issue</a> if you meet any problems.'  # noqa
+DISC = 'VideoMind is a multi-modal agent framework that enhances video reasoning by emulating *human-like* processes, such as *breaking down tasks*, *localizing and verifying moments*, and *synthesizing answers*. This demo showcases how VideoMind-2B handles video-language tasks. Please open an <a href="https://github.com/yeliudev/VideoMind/issues/new" target="_blank">issue</a> if you meet any problems.'  # noqa
 
 # yapf:disable
 EXAMPLES = [
@@ -77,6 +65,15 @@ EXAMPLES = [
     [f'{PATH}/examples/DTInxNfWXVc_210.0_360.0.mp4', "Find the video segment that corresponds to the given textual query 'man with headphones talking'.", ['pla', 'gnd', 'ver']],
 ]
 # yapf:enable
+
+# https://github.com/gradio-app/gradio/pull/10552
+JS = """
+function init() {
+    if (window.innerWidth >= 1536) {
+        document.querySelector('main').style.maxWidth = '1536px'
+    }
+}
+"""
 
 if not nncore.is_dir(BASE_MODEL):
     snapshot_download(BASE_MODEL_REPO, local_dir=BASE_MODEL)
@@ -120,11 +117,11 @@ def update_placeholder(role):
 
 
 def reset_components():
-    return ['pla', 'gnd', 'ver', 'ans'], 0, 256
+    return ['pla', 'gnd', 'ver', 'ans'], 5, 0, 256
 
 
 @spaces.GPU
-def main(video, prompt, role, temperature, max_new_tokens):
+def main(video, prompt, role, max_candidates, temperature, max_new_tokens):
     global model, processor, device
 
     history = []
@@ -356,8 +353,7 @@ def main(video, prompt, role, temperature, max_new_tokens):
         response += '\n| ID | Start Time | End Time | Confidence |'
         response += '\n| :-: | :-: | :-: | :-: |'
 
-        # using top-5 predictions
-        for i, (p, c) in enumerate(zip(pred[:5], conf[:5])):
+        for i, (p, c) in enumerate(zip(pred[:max_candidates], conf[:max_candidates])):
             response += f'\n| {i} | {seconds_to_hms(p[0])} | {seconds_to_hms(p[1])} | {c:.2f} |'
 
         response += f'\n\nTherefore, the target moment might happens from <span style="color:red">{seconds_to_hms(pred[0][0])}</span> to <span style="color:red">{seconds_to_hms(pred[0][1])}</span>.'
@@ -381,9 +377,8 @@ def main(video, prompt, role, temperature, max_new_tokens):
 
         start_time = time.perf_counter()
 
-        # using top-5 predictions
         prob = []
-        for i, cand in enumerate(pred[:5]):
+        for i, cand in enumerate(pred[:max_candidates]):
             s0, e0 = parse_span(cand, duration, 2)
             offset = (e0 - s0) / 2
             s1, e1 = parse_span([s0 - offset, e0 + offset], duration)
@@ -566,13 +561,14 @@ def build_demo():
     chat = gr.Chatbot(
         type='messages',
         height='70em',
+        resizable=True,
         avatar_images=[f'{PATH}/assets/user.png', f'{PATH}/assets/bot.png'],
         placeholder='A conversation with VideoMind',
         label='VideoMind')
 
     prompt = gr.Textbox(label='Text Prompt', placeholder='Ask a question about the video...')
 
-    with gr.Blocks(title=TITLE) as demo:
+    with gr.Blocks(title=TITLE, js=JS) as demo:
         gr.HTML(LOGO)
         gr.HTML(BADGE)
         gr.Markdown(DISC)
@@ -587,12 +583,19 @@ def build_demo():
                                  ('📝 Answerer', 'ans')],
                         value=['pla', 'gnd', 'ver', 'ans'],
                         interactive=True,
-                        elem_id='role',
                         label='Roles',
                         info='Select the role(s) you would like to activate.')
                     role.change(update_placeholder, role, prompt)
 
                     with gr.Accordion(label='Hyperparameters', open=False):
+                        max_candidates = gr.Slider(
+                            1,
+                            100,
+                            value=5,
+                            step=1,
+                            interactive=True,
+                            label='Max Candidate Moments',
+                            info='The maximum number of candidate moments in Grounder (Default: 5)')
                         temperature = gr.Slider(
                             0,
                             1,
@@ -605,6 +608,7 @@ def build_demo():
                             1,
                             1024,
                             value=256,
+                            step=1,
                             interactive=True,
                             label='Max Output Tokens',
                             info='The maximum number of output tokens for each role (Default: 256)')
@@ -616,12 +620,12 @@ def build_demo():
                     random_btn.click(random_sample, None, [video, prompt, role])
 
                     reset_btn = gr.ClearButton([video, prompt, chat], value='🗑️ Reset')
-                    reset_btn.click(reset_components, None, [role, temperature, max_new_tokens])
+                    reset_btn.click(reset_components, None, [role, max_candidates, temperature, max_new_tokens])
 
                     submit_btn = gr.Button(value='🚀 Submit', variant='primary')
-                    submit_ctx = submit_btn.click(disable_btns, None, [random_btn, reset_btn, submit_btn])
-                    submit_ctx = submit_ctx.then(main, [video, prompt, role, temperature, max_new_tokens], chat)
-                    submit_ctx.then(enable_btns, None, [random_btn, reset_btn, submit_btn])
+                    ctx = submit_btn.click(disable_btns, None, [random_btn, reset_btn, submit_btn])
+                    ctx = ctx.then(main, [video, prompt, role, max_candidates, temperature, max_new_tokens], chat)
+                    ctx.then(enable_btns, None, [random_btn, reset_btn, submit_btn])
 
                 gr.Examples(examples=EXAMPLES, inputs=[video, prompt, role], examples_per_page=3)
 
