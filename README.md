@@ -19,7 +19,7 @@
 
 **VideoMind** is a multi-modal agent framework that enhances video reasoning by emulating *human-like* processes, such as *breaking down tasks*, *localizing* and *verifying* moments, and *synthesizing answers*. This approach addresses the unique challenges of temporal-grounded reasoning in a progressive strategy.
 
-<p align="center"><img width="750" src=".github/method.jpg"></p>
+<p align="center"><img width="750" src=".github/method.png"></p>
 
 ## 🔥 News
 
