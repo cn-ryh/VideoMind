@@ -130,6 +130,7 @@ Note: Acc@IoU means both QA (Acc) and Grounding (IoP >= 0.5) are correct
 | UniVTG               | –    | ✓   | 65.43  | 50.06  | 64.06   | 45.02    | 43.63    |
 | R2-Tuning            | –    | ✓   | 68.03  | 49.35  | 69.04   | 47.56    | 46.17    |
 | **VideoMind** (Ours) | 2B   | ✓   | 75.42  | 59.35  | 74.11   | 55.15    | 51.60    |
+| **VideoMind** (Ours) | 7B   | ✓   | 78.53  | 61.09  | 76.07   | 58.17    | 54.19    |
 
 ### TACoS (test):
 
