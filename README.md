@@ -32,14 +32,14 @@
 
 | Benchmark                         | Evaluation Results (2B/7B) |
 |-----------------------------------|----------------------------|
-| `ZS` CG-Bench (mini)              | `long-acc: 31.0/38.4` `mIoU: 5.94/7.10` `rec@IoU: 8.50/9.93` `acc@IoU: 4.02/4.67` |
+| `ZS` CG-Bench (mini)              | `long-acc: 31.0/38.4` `rec@IoU: 8.50/9.93` `acc@IoU: 4.02/4.67` |
 | `ZS` ReXTime (val)                | `mIoU: 24.83/27.61` `Acc: 69.06/74.59` `Acc@IoU: 17.26/20.20` |
 | `ZS` NExT-GQA (test)              | `mIoU: 28.6/31.4` `mIoP: 36.4/39.0` `Acc@GQA: 25.2/28.2` |
-| `ZS` Charades-STA (test)          | `R@0.3: 67.6/73.5` `R@0.5: 51.1/59.1` `R@0.7: 26.0/31.2` `mIoU: 45.2/50.2` |
-| `ZS` ActivityNet-Captions (val_2) | `R@0.3: 44.0/48.4` `R@0.5: 26.5/30.3` `R@0.7: 12.6/15.7` `mIoU: 30.1/33.3` |
-| `FT` QVHighlights (test)          | `R@0.5: 75.42` `R@0.7: 59.35` `mAP@0.5: 74.11` `mAP@0.7: 55.15` `mAP: 51.60` |
-| `FT` TACoS (test)                 | `R@0.3: 38.6/49.5` `R@0.5: 26.9/36.2` `R@0.7: 15.5/21.4` `mIoU: 27.4/34.4` |
-| `ZS` Ego4D-NLQ (val)              | `R@0.3: 5.9/7.2` `R@0.5: 2.9/3.7` `R@0.7: 1.2/1.7` `mIoU: 4.7/5.4` |
+| `ZS` Charades-STA (test)          | `R@0.5: 51.1/59.1` `R@0.7: 26.0/31.2` `mIoU: 45.2/50.2` |
+| `ZS` ActivityNet-Captions (val_2) | `R@0.5: 26.5/30.3` `R@0.7: 12.6/15.7` `mIoU: 30.1/33.3` |
+| `FT` QVHighlights (test)          | `R@0.5: 75.42` `R@0.7: 59.35` `mAP: 51.60` |
+| `FT` TACoS (test)                 | `R@0.5: 26.9/36.2` `R@0.7: 15.5/21.4` `mIoU: 27.4/34.4` |
+| `ZS` Ego4D-NLQ (val)              | `R@0.5: 2.9/3.7` `R@0.7: 1.2/1.7` `mIoU: 4.7/5.4` |
 | `ZS` ActivityNet-RTL (val)        | `P@0.5: 20.1/28.0` `mIoU: 22.7/31.3` |
 | `ZS` Video-MME (w/o subs)         | `All: 53.6/58.2` `Long: 45.4/49.2` |
 | `ZS` MLVU                         | `M-Avg: 58.7/64.4` |
