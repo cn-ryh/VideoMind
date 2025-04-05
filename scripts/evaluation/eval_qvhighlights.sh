@@ -16,7 +16,7 @@ CHUNKS=${#GPULIST[@]}
 for IDX in $(seq 0 $((CHUNKS-1))); do
     CUDA_VISIBLE_DEVICES=${GPULIST[$IDX]} ASCEND_RT_VISIBLE_DEVICES=${GPULIST[$IDX]} python videomind/eval/infer_qvhighlights.py \
         --dataset qvhighlights \
-        --split val \
+        --split valid \
         --pred_path $pred_path \
         --model_gnd_path $model_gnd_path \
         --chunk $CHUNKS \
