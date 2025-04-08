@@ -72,7 +72,7 @@ Our codebase supports training and evaluating on [27 video datasets and benchmar
 - Customizing the base LLM and conversation templates
 - Monitoring the training process via Tensorboard / Wandb
 - Group sampling for mixed dataset training
-- Multi-process evaluation on public benchmarks
+- Multi-process / multi-device evaluation on public benchmarks
 
 See [TRAIN.md](/docs/TRAIN.md) for a quick start guide.
 
