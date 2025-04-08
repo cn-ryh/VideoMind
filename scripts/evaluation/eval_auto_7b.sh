@@ -13,7 +13,7 @@ model_gnd_path="model_zoo/VideoMind-7B"
 model_ver_path="model_zoo/VideoMind-7B"
 model_pla_path="model_zoo/VideoMind-7B"
 
-pred_path="outputs/${dataset}_${split}"
+pred_path="outputs_7b/${dataset}_${split}"
 
 echo -e "\e[1;36mEvaluating:\e[0m $dataset ($split)"
 

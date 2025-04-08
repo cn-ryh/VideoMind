@@ -43,7 +43,8 @@ def build_model(model_path, config=None, is_trainable=False, merge_adapter=False
             low_cpu_mem_usage=True,
             ignore_mismatched_sizes=True,
             attn_implementation=attn_implementation,
-            torch_dtype=dtype)
+            torch_dtype=dtype,
+            device_map='auto' if device == 'all' else None)
 
         try:
             model.generation_config = GenerationConfig.from_pretrained(model_path)
@@ -75,7 +76,8 @@ def build_model(model_path, config=None, is_trainable=False, merge_adapter=False
                 adapter_name=config.role,
                 is_trainable=is_trainable,
                 low_cpu_mem_usage=True,
-                torch_device=str(model.device))
+                # load adapters to the same device as embed_tokens
+                torch_device=str(model.model.embed_tokens.weight.device))
 
         if nncore.is_file(partial_path):
             print(f'Loading state dict from {partial_path}...')
@@ -101,7 +103,7 @@ def build_model(model_path, config=None, is_trainable=False, merge_adapter=False
             attn_implementation=attn_implementation,
             torch_dtype=dtype)
 
-    if not is_trainable:
+    if not is_trainable and device != 'all':
         device = get_auto_device(device) if device == 'auto' else device
         model = model.to(device).eval()
 

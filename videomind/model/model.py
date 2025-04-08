@@ -157,6 +157,9 @@ class AgentQwen2VLForConditionalGeneration(Qwen2VLForConditionalGeneration):
                 assert vision_s_inds[i][0] == vision_e_inds[i][0]
                 self.cache_vision_inds[vision_s_inds[i][0]].append([vision_s_inds[i][1] + 1, vision_e_inds[i][1]])
 
+        # move input ids to the correct device
+        input_ids = input_ids.to(self.model.embed_tokens.weight.device)
+
         outputs = super().forward(
             input_ids=input_ids,
             attention_mask=attention_mask,
