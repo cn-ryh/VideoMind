@@ -2,6 +2,7 @@ accelerate==1.2.1
 decord==0.6.0
 gradio==5.23.1
 nncore==0.4.5
+numpy==1.26.4
 pandas==2.2.3
 peft==0.14.0
 pysrt==1.1.2
