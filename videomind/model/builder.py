@@ -101,7 +101,8 @@ def build_model(model_path, config=None, is_trainable=False, merge_adapter=False
             config=config,
             low_cpu_mem_usage=True,
             attn_implementation=attn_implementation,
-            torch_dtype=dtype)
+            torch_dtype=dtype,
+            device_map='auto' if device == 'all' else None)
 
     if not is_trainable and device != 'all':
         device = get_auto_device(device) if device == 'auto' else device
