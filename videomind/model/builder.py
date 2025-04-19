@@ -10,7 +10,7 @@ from safetensors.torch import load_model
 from transformers import AutoConfig, AutoModel, AutoProcessor, GenerationConfig, Qwen2VLForConditionalGeneration
 
 
-def get_auto_device(device):
+def get_auto_device():
     try:
         import torch_npu
         has_npu = torch_npu.npu.is_available()
@@ -105,7 +105,7 @@ def build_model(model_path, config=None, is_trainable=False, merge_adapter=False
             device_map='auto' if device == 'all' else None)
 
     if not is_trainable and device != 'all':
-        device = get_auto_device(device) if device == 'auto' else device
+        device = get_auto_device() if device == 'auto' else device
         model = model.to(device).eval()
 
     return model, processor
