@@ -372,10 +372,10 @@ if __name__ == '__main__':
             print([s, e], span, duration)
 
             if args.use_subtitle and 'subtitle_path' in anno and nncore.is_file(anno['subtitle_path']):
-                # use only the first 100 subtitles to save memory
-                subs = load_subtitle(anno['subtitle_path'])[:100]
+                subs = load_subtitle(anno['subtitle_path'])
                 subs = [f'{round(a - s, 1)}s - {round(b - s, 1)}s, {t}\n' for a, b, t in subs if a >= s and b <= e]
-                subs = ''.join(subs)
+                # use only the first 100 subtitles to save memory
+                subs = ''.join(subs[:100])
                 prompt = f'You are given a video with {round(e - s, 1)} seconds long.\nSubtitles:\n{subs}' + prompt
 
             messages = [{
