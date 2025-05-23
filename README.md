@@ -17,6 +17,8 @@
   <p align="center"><sup>1</sup>The Hong Kong Polytechnic University <sup>2</sup>Show Lab, National University of Singapore</p>
 </p>
 
+> **TL;DR:** Pioneer DeepSearch-like Video Understanding.
+
 **VideoMind** is a multi-modal agent framework that enhances video reasoning by emulating *human-like* processes, such as *breaking down tasks*, *localizing* and *verifying* moments, and *synthesizing answers*. This approach addresses the unique challenges of temporal-grounded reasoning in a progressive strategy.
 
 <p align="center"><img width="750" src=".github/method.png"></p>
