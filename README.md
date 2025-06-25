@@ -50,7 +50,7 @@
 | `ZS` MVBench                      | `Acc: 61.9/64.6`                                                |
 | `ZS` LongVideoBench               | `Acc: 48.8/56.3`                                                |
 
-`ZS` and `FT` refer to zero-shot and fine-tuned settings, respectively. * means the results are reported from other papers.
+`ZS` and `FT` refer to zero-shot and fine-tuned settings, respectively. * means the results are from other papers.
 
 See [BENCHMARK.md](/docs/BENCHMARK.md) for full evaluation results.
 
