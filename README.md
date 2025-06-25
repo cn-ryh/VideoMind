@@ -37,6 +37,7 @@
 | `ZS` CG-Bench (mini)              | `long-acc: 31.0/38.4` `rec@IoU: 8.50/9.93` `acc@IoU: 4.02/4.67` |
 | `ZS` ReXTime (val)                | `mIoU: 24.83/27.61` `Acc: 69.06/74.59` `Acc@IoU: 17.26/20.20`   |
 | `ZS` NExT-GQA (test)              | `mIoU: 28.6/31.4` `mIoP: 36.4/39.0` `Acc@GQA: 25.2/28.2`        |
+| `ZS` DeVE-QA (val)*               | `mIoU: 26.3/30.1` `mIoP: 49.9/51.9` `Acc@GQA: 41.2/44.2`        |
 | `ZS` Charades-STA (test)          | `R@0.5: 51.1/59.1` `R@0.7: 26.0/31.2` `mIoU: 45.2/50.2`         |
 | `ZS` ActivityNet-Captions (val_2) | `R@0.5: 26.5/30.3` `R@0.7: 12.6/15.7` `mIoU: 30.1/33.3`         |
 | `FT` QVHighlights (test)          | `R@0.5: 75.42/78.53` `R@0.7: 59.35/61.09` `mAP: 51.60/54.19`    |
@@ -49,7 +50,7 @@
 | `ZS` MVBench                      | `Acc: 61.9/64.6`                                                |
 | `ZS` LongVideoBench               | `Acc: 48.8/56.3`                                                |
 
-`ZS` means zero-shot evaluation, and `FT` denotes fine-tuned on the training set.
+`ZS` and `FT` refer to zero-shot and fine-tuned settings, respectively. * means the results are reported from other papers.
 
 See [BENCHMARK.md](/docs/BENCHMARK.md) for full evaluation results.
 
