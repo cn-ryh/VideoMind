@@ -59,11 +59,84 @@ https://github.com/user-attachments/assets/a4d99c05-aa73-4ed9-a275-2362a201bfec
 
 Play with our [online demo](https://huggingface.co/spaces/yeliudev/VideoMind-2B) or see [DEMO.md](/docs/DEMO.md) for guidelines about how to deploy it locally.
 
-## 📦 Datasets
+## 📦 VideoMind-SFT Dataset
 
 We provide raw videos, compressed videos, and pre-processed annotations of **27 video grounding / QA datasets**, including our **VideoMind-SFT** (481K) for training and multiple benchmarks for evaluation. We also release the datasets used during our early exploration (but not included in the final version) to facilitate future research.
 
-See our [dataset repo](https://huggingface.co/datasets/yeliudev/VideoMind-Dataset) for more details.
+The list of source datasets is shown below. See our [dataset repo](https://huggingface.co/datasets/yeliudev/VideoMind-Dataset) for more details.
+
+#### Grounder (210K):
+
+| Dataset | Source | Processed (Recommended) |
+|-|:-:|:-:|
+| QVHighlights | [Link](https://github.com/jayleicn/moment_detr) | [`qvhighlights`](https://huggingface.co/datasets/yeliudev/VideoMind-Dataset/tree/main/qvhighlights) |
+| DiDeMo | [Link](https://github.com/LisaAnne/LocalizingMoments/) | [`didemo`](https://huggingface.co/datasets/yeliudev/VideoMind-Dataset/tree/main/didemo) |
+| TACoS | [Link](https://www.mpi-inf.mpg.de/departments/computer-vision-and-machine-learning/research/vision-and-language/tacos-multi-level-corpus) | [`tacos`](https://huggingface.co/datasets/yeliudev/VideoMind-Dataset/tree/main/tacos) |
+| QuerYD | [Link](https://www.robots.ox.ac.uk/~vgg/data/queryd/) | [`queryd`](https://huggingface.co/datasets/yeliudev/VideoMind-Dataset/tree/main/queryd) |
+| HiREST (Grounding) | [Link](https://github.com/j-min/HiREST) | [`hirest`](https://huggingface.co/datasets/yeliudev/VideoMind-Dataset/tree/main/hirest) |
+| HiREST (Step Captioning) | [Link](https://github.com/j-min/HiREST) | [`hirest`](https://huggingface.co/datasets/yeliudev/VideoMind-Dataset/tree/main/hirest) |
+| CosMo-Cap | [Link](https://github.com/showlab/cosmo) | [`cosmo_cap`](https://huggingface.co/datasets/yeliudev/VideoMind-Dataset/tree/main/cosmo_cap) |
+| InternVid-VTime | [Link](https://github.com/OpenGVLab/InternVideo/tree/main/Data/InternVid) | [`internvid_vtime`](https://huggingface.co/datasets/yeliudev/VideoMind-Dataset/tree/main/internvid_vtime) |
+
+#### Verifier (232K):
+
+| Dataset | Source | Processed (Recommended) |
+|-|:-:|:-:|
+| QVHighlights-Verify | [Link](https://github.com/jayleicn/moment_detr) | [`verifying`](https://huggingface.co/datasets/yeliudev/VideoMind-Dataset/tree/main/verifying), [`qvhighlights`](https://huggingface.co/datasets/yeliudev/VideoMind-Dataset/tree/main/qvhighlights) |
+| DiDeMo-Verify | [Link](https://github.com/LisaAnne/LocalizingMoments/) | [`verifying`](https://huggingface.co/datasets/yeliudev/VideoMind-Dataset/tree/main/verifying), [`didemo`](https://huggingface.co/datasets/yeliudev/VideoMind-Dataset/tree/main/didemo) |
+| TACoS-Verify | [Link](https://www.mpi-inf.mpg.de/departments/computer-vision-and-machine-learning/research/vision-and-language/tacos-multi-level-corpus) | [`verifying`](https://huggingface.co/datasets/yeliudev/VideoMind-Dataset/tree/main/verifying),[`tacos`](https://huggingface.co/datasets/yeliudev/VideoMind-Dataset/tree/main/tacos) |
+
+#### Planner (39K):
+
+| Dataset | Source | Processed (Recommended) |
+|-|:-:|:-:|
+| NExT-QA-Plan | [Link](https://github.com/doc-doc/NExT-QA) | [`planning`](https://huggingface.co/datasets/yeliudev/VideoMind-Dataset/tree/main/planning), [`nextqa`](https://huggingface.co/datasets/yeliudev/VideoMind-Dataset/tree/main/nextqa) |
+| QVHighlights-Plan | [Link](https://github.com/jayleicn/moment_detr) | [`planning`](https://huggingface.co/datasets/yeliudev/VideoMind-Dataset/tree/main/planning), [`qvhighlights`](https://huggingface.co/datasets/yeliudev/VideoMind-Dataset/tree/main/qvhighlights) |
+
+#### Benchmarks
+
+| Dataset | Task | Source | Processed (Recommended) |
+|-|:-:|:-:|:-:|
+| CG-Bench | Grounded VideoQA | [Link](https://huggingface.co/datasets/CG-Bench/CG-Bench) | [`cgbench`](https://huggingface.co/datasets/yeliudev/VideoMind-Dataset/tree/main/cgbench) |
+| ReXTime | Grounded VideoQA | [Link](https://github.com/ReXTime/ReXTime) | [`rextime`](https://huggingface.co/datasets/yeliudev/VideoMind-Dataset/tree/main/rextime), [`activitynet`](https://huggingface.co/datasets/yeliudev/VideoMind-Dataset/tree/main/activitynet), [`qvhighlights`](https://huggingface.co/datasets/yeliudev/VideoMind-Dataset/tree/main/qvhighlights) |
+| NExT-GQA | Grounded VideoQA | [Link](https://github.com/doc-doc/NExT-GQA) | [`nextgqa`](https://huggingface.co/datasets/yeliudev/VideoMind-Dataset/tree/main/nextgqa) |
+| Charades-STA | VTG | [Link](https://github.com/jiyanggao/TALL) | [`charades_sta`](https://huggingface.co/datasets/yeliudev/VideoMind-Dataset/tree/main/charades_sta) |
+| ActivityNet-Captions | VTG | [Link](https://cs.stanford.edu/people/ranjaykrishna/densevid/) | [`activitynet_captions`](https://huggingface.co/datasets/yeliudev/VideoMind-Dataset/tree/main/activitynet_captions), [`activitynet`](https://huggingface.co/datasets/yeliudev/VideoMind-Dataset/tree/main/activitynet) |
+| QVHighlights | VTG | [Link](https://github.com/jayleicn/moment_detr) | [`qvhighlights`](https://huggingface.co/datasets/yeliudev/VideoMind-Dataset/tree/main/qvhighlights) |
+| TACoS | VTG | [Link](https://www.mpi-inf.mpg.de/departments/computer-vision-and-machine-learning/research/vision-and-language/tacos-multi-level-corpus) | [`tacos`](https://huggingface.co/datasets/yeliudev/VideoMind-Dataset/tree/main/tacos) |
+| Ego4D-NLQ | VTG | [Link](https://ego4d-data.org/) | [`ego4d_nlq`](https://huggingface.co/datasets/yeliudev/VideoMind-Dataset/tree/main/ego4d_nlq), [`ego4d`](https://huggingface.co/datasets/yeliudev/VideoMind-Dataset/tree/main/ego4d) |
+| ActivityNet-RTL | VTG | [Link](https://github.com/NVlabs/LITA) | [`activitynet_rtl`](https://huggingface.co/datasets/yeliudev/VideoMind-Dataset/tree/main/activitynet_rtl), [`activitynet`](https://huggingface.co/datasets/yeliudev/VideoMind-Dataset/tree/main/activitynet) |
+| Video-MME | General VideoQA | [Link](https://github.com/BradyFU/Video-MME) | [`videomme`](https://huggingface.co/datasets/yeliudev/VideoMind-Dataset/tree/main/videomme) |
+| MLVU | General VideoQA | [Link](https://github.com/JUNJIE99/MLVU) | [`mlvu`](https://huggingface.co/datasets/yeliudev/VideoMind-Dataset/tree/main/mlvu) |
+| LVBench | General VideoQA | [Link](https://github.com/THUDM/LVBench) | [`lvbench`](https://huggingface.co/datasets/yeliudev/VideoMind-Dataset/tree/main/lvbench) |
+| MVBench | General VideoQA | [Link](https://github.com/OpenGVLab/Ask-Anything/blob/main/video_chat2/MVBENCH.md) | [`mvbench`](https://huggingface.co/datasets/yeliudev/VideoMind-Dataset/tree/main/mvbench) |
+| LongVideoBench | General VideoQA | [Link](https://github.com/longvideobench/LongVideoBench) | [`longvideobench`](https://huggingface.co/datasets/yeliudev/VideoMind-Dataset/tree/main/longvideobench) |
+
+The following datasets are not used in our project (partially used during early exploration), but we still share them to facilitate future research.
+
+| Dataset | Task | Training | Evaluation | Source | Processed (Recommended) |
+|-|:-:|:-:|:-:|:-:|:-:|
+| QaEgo4D | Grounded VideoQA | ✅ | ✅ | [Link](https://github.com/lbaermann/qaego4d) | [`qa_ego4d`](https://huggingface.co/datasets/yeliudev/VideoMind-Dataset/tree/main/qa_ego4d), [`ego4d`](https://huggingface.co/datasets/yeliudev/VideoMind-Dataset/tree/main/ego4d) |
+| Ego4D-NaQ | VTG | ✅ | ✅ | [Link](https://github.com/srama2512/NaQ) | [`ego4d_naq`](https://huggingface.co/datasets/yeliudev/VideoMind-Dataset/tree/main/ego4d_naq), [`ego4d`](https://huggingface.co/datasets/yeliudev/VideoMind-Dataset/tree/main/ego4d) |
+| Ego-TimeQA | VTG | ✅ | ❌ | [Link](https://github.com/Becomebright/GroundVQA) | [`ego_timeqa`](https://huggingface.co/datasets/yeliudev/VideoMind-Dataset/tree/main/ego_timeqa), [`ego4d`](https://huggingface.co/datasets/yeliudev/VideoMind-Dataset/tree/main/ego4d) |
+| Vid-Morp | VTG | ✅ | ❌ | [Link](https://github.com/baopj/Vid-Morp) | [`vid_morp`](https://huggingface.co/datasets/yeliudev/VideoMind-Dataset/tree/main/vid_morp) |
+| VideoXum | VTG (originally VS) | ✅ | ✅ | [Link](https://github.com/jylins/videoxum) | [`videoxum`](https://huggingface.co/datasets/yeliudev/VideoMind-Dataset/tree/main/videoxum) |
+| YouCook2 | VTG (originally DVC) | ✅ | ✅ | [Link](http://youcook2.eecs.umich.edu/) | [`youcook2`](https://huggingface.co/datasets/yeliudev/VideoMind-Dataset/tree/main/youcook2) |
+| STAR | VideoQA | ✅ | ✅ | [Link](https://bobbywu.com/STAR/) | [`star`](https://huggingface.co/datasets/yeliudev/VideoMind-Dataset/tree/main/star), [`charades_sta`](https://huggingface.co/datasets/yeliudev/VideoMind-Dataset/tree/main/charades_sta) |
+| COIN | - | - | - | [Link](https://github.com/coin-dataset/annotations) | [`coin`](https://huggingface.co/datasets/yeliudev/VideoMind-Dataset/tree/main/coin) |
+
+**Notes**:
+
+1. For some datasets (e.g., ReXTime), the annotations and videos are stored in different folders. All the directories in `Processed` need to be downloaded.
+2. Use the following commands to concatenate and extract video tar splits (e.g., videos.tar.gz.00, videos_3fps_480_noaudio.tar.gz.00).
+
+```
+# videos.tar.gz.00, videos.tar.gz.01
+cat videos.tar.gz.* | tar -zxvf -
+
+# videos_3fps_480_noaudio.tar.gz.00, videos_3fps_480_noaudio.tar.gz.01
+cat videos_3fps_480_noaudio.tar.gz.* | tar -zxvf -
+```
 
 ## 🚀 Training
 
