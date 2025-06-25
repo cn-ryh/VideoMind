@@ -6,6 +6,7 @@
   - [CG-Bench](#cg-bench-mini)
   - [ReXTime](#rextime-val)
   - [NExT-GQA](#next-gqa-test)
+  - [DeVE-QA](#deve-qa-val)
 - Video Temporal Grounding (VTG)
   - [Charades-STA](#charades-sta-test)
   - [ActivityNet-Captions](#activitynet-captions-val_2)
@@ -80,7 +81,16 @@ Note: Acc@IoU means both QA (Acc) and Grounding (IoU >= 0.5) are correct
 | **VideoMind** (Ours) | 2B    | 45.2      | 23.2      | 28.6 | 51.3      | 32.6      | 36.4 | 25.2    |
 | **VideoMind** (Ours) | 7B    | 50.2      | 25.8      | 31.4 | 56.0      | 35.3      | 39.0 | 28.2    |
 
-Note: Acc@IoU means both QA (Acc) and Grounding (IoP >= 0.5) are correct
+Note: Acc@GQA means both QA (Acc) and Grounding (IoP >= 0.5) are correct
+
+### DeVE-QA (val):
+
+| Model                | Size  | R@IoU-0.5 | mIoU | R@IoP-0.5 | mIoP | Acc@QA | Acc@GQA |
+|----------------------|:-----:|:---------:|:----:|:---------:|:----:|:------:|:-------:|
+| **VideoMind** (Ours) | 2B    | 21.7      | 26.3 | 50.7      | 49.9 | 76.5   | 41.2    |
+| **VideoMind** (Ours) | 7B    | 26.5      | 30.1 | 52.3      | 51.9 | 81.0   | 44.2    |
+
+Note: Acc@GQA means both QA (Acc) and Grounding (IoP >= 0.5) are correct
 
 ### Charades-STA (test):
 
