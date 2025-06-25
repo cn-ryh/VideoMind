@@ -33,7 +33,7 @@ conda activate videomind
 pip install -r requirements.txt
 ```
 
-For NPU users, please modify [Line 18-25](https://github.com/yeliudev/VideoMind/blob/main/requirements.txt#L18:L25) of `requirements.txt`.
+For NPU users, please modify [Line 25-32](https://github.com/yeliudev/VideoMind/blob/main/requirements.txt#L25:L32) of `requirements.txt`.
 
 ### Prepare base models
 
