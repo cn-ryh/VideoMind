@@ -1,10 +1,12 @@
 accelerate==1.2.1
 decord==0.6.0
+fastparquet==2024.11.0
 gradio==5.23.1
 nncore==0.4.5
 numpy==1.26.4
 pandas==2.2.3
 peft==0.14.0
+pyarrow==21.0.0
 pysrt==1.1.2
 safetensors==0.5.3
 scikit-image==0.25.0
