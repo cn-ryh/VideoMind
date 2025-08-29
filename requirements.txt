@@ -6,6 +6,7 @@ numpy==1.26.4
 pandas==2.2.3
 peft==0.14.0
 pysrt==1.1.2
+safetensors==0.5.3
 scikit-image==0.25.0
 scikit-learn==1.6.1
 sentencepiece==0.2.0
