@@ -33,7 +33,11 @@ class MVBenchDataset(Dataset):
 
     DATA_ROOT = 'data/mvbench'
 
-    MIN_LEN = 64
+    MIN_PIXELS = 128
+    MAX_PIXELS = 256
+    MAX_FRAMES = 64
+
+    MIN_RATIO = 0.9
 
     @classmethod
     def load_annos(self, split='test', sample_frames=32):

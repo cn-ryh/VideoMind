@@ -44,10 +44,10 @@
 | `FT` TACoS (test)                 | `R@0.5: 26.9/36.2` `R@0.7: 15.5/21.4` `mIoU: 27.4/34.4`         |
 | `ZS` Ego4D-NLQ (val)              | `R@0.5: 2.9/3.7` `R@0.7: 1.2/1.7` `mIoU: 4.7/5.4`               |
 | `ZS` ActivityNet-RTL (val)        | `P@0.5: 20.1/28.0` `mIoU: 22.7/31.3`                            |
-| `ZS` Video-MME (w/o subs)         | `All: 53.6/58.2` `Long: 45.4/49.2`                              |
+| `ZS` Video-MME (w/o subs)         | `All: 55.4/58.2` `Long: 46.3/49.2`                              |
 | `ZS` MLVU                         | `M-Avg: 58.7/64.4`                                              |
 | `ZS` LVBench                      | `Overall: 35.4/40.8`                                            |
-| `ZS` MVBench                      | `Acc: 61.9/64.6`                                                |
+| `ZS` MVBench                      | `Acc: 62.5/64.6`                                                |
 | `ZS` LongVideoBench               | `Acc: 48.8/56.3`                                                |
 
 `ZS` and `FT` refer to zero-shot and fine-tuned settings, respectively. * means third-party results.

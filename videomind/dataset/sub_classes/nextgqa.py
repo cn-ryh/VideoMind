@@ -50,10 +50,12 @@ class NExTGQADataset(AnsweringDataset):
 
             video_id = video_id_map[vid]
 
-            query = parse_query(raw_anno['question'].capitalize() + '?')
-            question = parse_question(raw_anno['question'].capitalize() + '?')
-            options = [raw_anno[k].capitalize() for k in ('a0', 'a1', 'a2', 'a3', 'a4')]
-            answer = raw_anno['answer'].capitalize()
+            question = raw_anno['question'][0].upper() + raw_anno['question'][1:] + '?'
+
+            query = parse_query(question)
+            question = parse_question(question)
+            options = [raw_anno[k][0].upper() + raw_anno[k][1:] for k in ('a0', 'a1', 'a2', 'a3', 'a4')]
+            answer = raw_anno['answer'][0].upper() + raw_anno['answer'][1:]
             ans = chr(ord('A') + options.index(answer))
 
             anno = dict(

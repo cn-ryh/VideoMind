@@ -16,6 +16,12 @@ class VideoMMEDataset(Dataset):
     VIDEO_ROOT = 'data/videomme/videos'
     SUBTITLE_ROOT = 'data/videomme/subtitles'
 
+    MIN_PIXELS = 100
+    MAX_PIXELS = 128
+    MAX_FRAMES = 300
+
+    MIN_RATIO = 0.8
+
     @classmethod
     def load_annos(self, split='test'):
         assert split == 'test'

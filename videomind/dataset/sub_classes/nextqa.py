@@ -39,10 +39,12 @@ class NExTQADataset(AnsweringDataset):
             vid = raw_anno['video']
             qid = raw_anno['qid']
 
+            question = raw_anno['question'][0].upper() + raw_anno['question'][1:] + '?'
+
             video_id = video_id_map[vid]
-            query = parse_query(raw_anno['question'].capitalize() + '?')
-            question = parse_question(raw_anno['question'].capitalize() + '?')
-            options = [raw_anno[k].capitalize() for k in ('a0', 'a1', 'a2', 'a3', 'a4')]
+            query = parse_query(question)
+            question = parse_question(question)
+            options = [raw_anno[k][0].upper() + raw_anno[k][1:] for k in ('a0', 'a1', 'a2', 'a3', 'a4')]
             ans = chr(ord('A') + int(raw_anno['answer']))
             answer = options[int(raw_anno['answer'])]
 

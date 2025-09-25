@@ -77,7 +77,9 @@ if __name__ == '__main__':
             model.load_adapter(adapter_path, adapter_name='answerer')
             adapter_state['answerer'] = True
 
-    annos = DATASETS.get(args.dataset).load_annos(split=args.split)
+    dataset_cls = DATASETS.get(args.dataset)
+
+    annos = dataset_cls.load_annos(split=args.split)
     annos = [annos[i::args.chunk] for i in range(args.chunk)][args.index]
 
     dumps = []
@@ -104,7 +106,7 @@ if __name__ == '__main__':
             if args.style in ('mcq', 'options'):
                 prompt = question + '\nOptions:'
                 for idx, opt in enumerate(options):
-                    prompt += f"\n({chr(ord('A') + idx)}) {opt.capitalize()}"
+                    prompt += f"\n({chr(ord('A') + idx)}) {opt[0].upper() + opt[1:]}"
                 prompt += '\nPlease only give the best option.'
             else:
                 prompt = question
@@ -248,7 +250,7 @@ if __name__ == '__main__':
                 pred = pred.clamp(min=0, max=duration)
 
                 # 3. round timestamps to units
-                unit = getattr(DATASETS.get(args.dataset), 'UNIT', 0.001)
+                unit = getattr(dataset_cls, 'UNIT', 0.001)
                 pred = torch.round(pred / unit).long() * unit
 
                 # 4. sort timestamps
@@ -367,7 +369,11 @@ if __name__ == '__main__':
             # choose the potential best moment
             selected = pred[0] if 'pred' in dump else [0, duration]
 
-            min_len = getattr(DATASETS.get(args.dataset), 'MIN_LEN', 32)
+            if hasattr(dataset_cls, 'MIN_RATIO'):
+                min_len = duration * dataset_cls.MIN_RATIO
+            else:
+                min_len = getattr(dataset_cls, 'MIN_LEN', 32)
+
             s, e = parse_span(selected, duration, min_len)
             print([s, e], span, duration)
 
@@ -387,10 +393,10 @@ if __name__ == '__main__':
                     'num_threads': args.num_threads,
                     'video_start': s,
                     'video_end': e,
-                    'min_pixels': 128 * 28 * 28,
-                    'max_pixels': 256 * 28 * 28,
-                    'max_frames': 32,
-                    'fps': 2.0
+                    'min_pixels': getattr(dataset_cls, 'MIN_PIXELS', 128) * 28 * 28,
+                    'max_pixels': getattr(dataset_cls, 'MAX_PIXELS', 256) * 28 * 28,
+                    'max_frames': getattr(dataset_cls, 'MAX_FRAMES', 32),
+                    'fps': getattr(dataset_cls, 'FPS', 2.0)
                 }, {
                     'type': 'text',
                     'text': prompt

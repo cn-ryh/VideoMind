@@ -50,6 +50,8 @@ class ReXTimeDataset(AnsweringDataset):
                 video_path = nncore.join(self.VIDEO_ROOT_QVHL, vid + '.mp4')
                 duration = durations_qvhl[vid]
 
+            answer = raw_anno['answer'].replace('From <s0> to <e0>, ', '')
+
             anno = dict(
                 source=self.SOURCE,
                 data_type=self.DATA_TYPE,
@@ -57,8 +59,8 @@ class ReXTimeDataset(AnsweringDataset):
                 duration=duration,
                 query=parse_query(raw_anno['question']),
                 question=parse_question(raw_anno['question']),
-                options=[o.capitalize() for o in raw_anno['options']],
-                answer=raw_anno['answer'].replace('From <s0> to <e0>, ', '').capitalize(),
+                options=[o[0].upper() + o[1:] for o in raw_anno['options']],
+                answer=answer[0].upper() + answer[1:],
                 ans=raw_anno['ans'],
                 span=[raw_anno['span']],
                 task=raw_anno['category'])

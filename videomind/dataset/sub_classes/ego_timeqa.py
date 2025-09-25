@@ -46,8 +46,8 @@ class EgoTimeQADataset(AnsweringDataset):
             # if span[1] - span[0] < 2:
             #     continue
 
-            question = raw_anno['question'].replace(' l ', ' I ').capitalize()
-            question = parse_question(question)
+            question = raw_anno['question'].replace(' l ', ' I ')
+            question = parse_question(question[0].upper() + question[1:])
             query = parse_query(question)
 
             # too short or too long samples
@@ -55,12 +55,12 @@ class EgoTimeQADataset(AnsweringDataset):
             if split == 'train' and (num_words < 3 or num_words > 30):
                 continue
 
-            answer = raw_anno['answer'].capitalize()
+            answer = raw_anno['answer'][0].upper() + raw_anno['answer'][1:]
 
             assert len(raw_anno['wrong_answers']) == 3
             idx = random.randint(0, 3)
             ans = chr(ord('A') + idx)
-            options = [o.capitalize() for o in raw_anno['wrong_answers']]
+            options = [o[0].upper() + o[1:] for o in raw_anno['wrong_answers']]
             options.insert(idx, answer)
 
             anno = dict(
